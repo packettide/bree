@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 {
     "name": "packettide/bree",
     "description": "",
@@ -20,4 +21,28 @@
         }
     },
     "minimum-stability": "dev"
+=======
+{
+    "name": "packettide/bree",
+    "description": "",
+    "authors": [
+        {
+            "name": "Packet Tide",
+            "email": "hello@packettide.com"
+        }
+    ],
+    "require": {
+        "php": ">=5.3.0",
+        "illuminate/support": "4.0.x"
+    },
+    "autoload": {
+        "classmap": [
+            "src/migrations"
+        ],
+        "psr-0": {
+            "Packettide\\Bree": "src/"
+        }
+    },
+    "minimum-stability": "dev"
+>>>>>>> 2cc4c0795e71398c0e5e923a9901966dbca2e3c4
 }
