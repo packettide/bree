@@ -1,0 +1,23 @@
+{
+    "name": "packettide/bree",
+    "description": "",
+    "authors": [
+        {
+            "name": "Packet Tide",
+            "email": "hello@packettide.com"
+        }
+    ],
+    "require": {
+        "php": ">=5.3.0",
+        "illuminate/support": "4.0.x"
+    },
+    "autoload": {
+        "classmap": [
+            "src/migrations"
+        ],
+        "psr-0": {
+            "Packettide\\Bree": "src/"
+        }
+    },
+    "minimum-stability": "dev"
+}
