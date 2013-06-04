@@ -4,10 +4,9 @@ use Packettide\Bree\Admin\FieldType;
 
 class TextArea extends FieldType {
 
-	public static function get($name, $data)
+	public function field()
 	{
-		// return Form::text($name, $data);
-		return '<textarea name="'.$name.'">'.$data.'</textarea>';
+		return '<textarea name="'.$this->name.'">'.$this->data.'</textarea>';
 	}
 
 

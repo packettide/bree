@@ -46,10 +46,8 @@ class Model {
 		$fieldType = 'Packettide\Bree\Admin\FieldTypes\\'.$fieldType;
 		if(class_exists($fieldType))
 		{
-			$ft = new $fieldType;
-			$data = $ft::get($key, $data);
+			$data = new $fieldType($key, $data);
 		}
-		
 		return $data;
 	}
 
@@ -64,10 +62,10 @@ class Model {
 	 */
 	public function __call($method, $parameters)
 	{
-		// if (in_array($method, array('increment', 'decrement')))
-		// {
-		// 	return call_user_func_array(array($this, $method), $parameters);
-		// }
+		if (in_array($method, array('save','increment', 'decrement')))
+		{
+			return call_user_func_array(array($this->baseModelInstance, $method), $parameters);
+		}
 
 		//echo 'here '. $method;
 
@@ -79,21 +77,51 @@ class Model {
 		return $this;
 	}
 
+	/**
+	 * Handle dynamic static method calls into the method.
+	 *
+	 * @param  string  $method
+	 * @param  array   $parameters
+	 * @return mixed
+	 */
+	public static function __callStatic($method, $parameters)
+	{
+		$instance = new $this->baseModel;
+
+		return call_user_func_array(array($instance, $method), $parameters);
+	}
+
+
 	public function __get($key)
 	{
 		$attribute = $this->baseModelInstance->getAttribute($key);
+		var_dump($attribute[0]);
 		
+		// if a FieldType was passed for this attribute process it
 		if(isset($this->fields[$key]))
 		{
 			$attribute = $this->getField($key, $attribute, $this->fields[$key]);
 		}
-
 		return $attribute;
+	}
+
+
+	public function __set($key, $value)
+	{
+		$this->baseModelInstance->setAttribute($key, $value);
 	}
 
 	public function __toString()
 	{
-		return $this->baseModelInstance->toJson();
+		$output = '';
+
+		foreach($this->fields as $field => $type)
+		{
+			$output .= '<div class="field">'. $this->$field . '</div>';
+		}
+		
+		return $output;
+		//return $this->baseModelInstance->toJson();
 	}
 
 }

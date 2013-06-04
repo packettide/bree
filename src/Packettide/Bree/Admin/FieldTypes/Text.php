@@ -4,10 +4,10 @@ use Packettide\Bree\Admin\FieldType;
 
 class Text extends FieldType {
 
-	public static function get($name, $data)
+	public function field()
 	{
 		// return Form::text($name, $data);
-		return '<input name="'.$name.'" value="'.$data.'" />';
+		return '<input name="'.$this->name.'" value="'.$this->data.'" />';
 	}
 
 
