@@ -52,7 +52,6 @@ class Model {
 	}
 
 
-
 	/**
 	 * Handle dynamic method calls into the method.
 	 *
@@ -95,7 +94,7 @@ class Model {
 	public function __get($key)
 	{
 		$attribute = $this->baseModelInstance->getAttribute($key);
-		var_dump($attribute[0]);
+		//var_dump($attribute[0]);
 		
 		// if a FieldType was passed for this attribute process it
 		if(isset($this->fields[$key]))
@@ -108,7 +107,23 @@ class Model {
 
 	public function __set($key, $value)
 	{
-		$this->baseModelInstance->setAttribute($key, $value);
+		// if field is relation
+		if($this->fields[$key] == 'InlineStacked')
+		{
+			$camelKey = camel_case($key);
+
+			if (method_exists($this->baseModel, $camelKey))
+			{
+				$relation = $this->baseModelInstance->$camelKey();
+
+				$ft = $this->getField($key, $value, 'InlineStacked');
+				$ft->save($relation);
+			}
+		}
+		else
+		{
+			$this->baseModelInstance->setAttribute($key, $value);	
+		}
 	}
 
 	public function __toString()
