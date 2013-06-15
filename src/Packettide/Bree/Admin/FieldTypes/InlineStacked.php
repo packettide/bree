@@ -1,6 +1,7 @@
 <?php namespace Packettide\Bree\Admin\FieldTypes;
 
 use Packettide\Bree\Admin\FieldType;
+use Illuminate\Support\Collection as Collection;
 
 class InlineStacked extends FieldType {
 
@@ -9,16 +10,20 @@ class InlineStacked extends FieldType {
 	 */
 	public function field()
 	{
-		// return Form::text($name, $data);
-		if(is_array($this->data))
+		//var_dump($this->data);
+		$options = '';
+		if($this->data instanceof Collection)
 		{
-
+			foreach($this->data as $row)
+			{
+				$options .= '<option value="'. $row->getKey() .'">'. $row->{$this->options['title']} .'</option>';
+			}
 		}
 		else
 		{
 
 		}
-		return '<input name="'.$this->name.'" value="'.$this->data.'" />';
+		return '<select name="'.$this->name.'">'. $options .'</select>';
 	}
 
 	/**

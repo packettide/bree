@@ -40,13 +40,16 @@ class Model {
 	/**
 	 *
 	 */
-	public function getField($key, $data, $fieldType)
+	public function getField($key, $data, $field)
 	{
-		//could this be done with some kind of autoloading and exclude the namespace?
-		$fieldType = 'Packettide\Bree\Admin\FieldTypes\\'.$fieldType;
-		if(class_exists($fieldType))
+		if($field['type'])
 		{
-			$data = new $fieldType($key, $data);
+			//could this be done with some kind of autoloading and exclude the namespace?
+			$fieldType = 'Packettide\Bree\Admin\FieldTypes\\'.$field['type'];
+			if(class_exists($fieldType))
+			{
+				$data = new $fieldType($key, $data, $field);
+			}
 		}
 		return $data;
 	}

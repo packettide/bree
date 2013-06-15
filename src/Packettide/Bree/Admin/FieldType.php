@@ -14,7 +14,12 @@ class FieldType {
 
 	public function field() {}
 
-	
+	public function label() {
+		if(isset($this->options['label']))
+		{
+			return '<label for="'.$this->name.'">'.$this->options['label'].'</label>';
+		}
+	}
 
 	public function __get($key) {
 		if(isset($this->options[$key])) 
@@ -25,7 +30,7 @@ class FieldType {
 
 	public function __toString()
 	{
-		return $this->field();
+		return $this->label() . $this->field();
 	}
 
 
