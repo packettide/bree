@@ -4,6 +4,7 @@ class FieldType {
 
 	public $name;
 	public $data;
+	public $options;
 
 	public function __construct($name, $data, $options=array())
 	{

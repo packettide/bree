@@ -2,6 +2,7 @@
 
 use Packettide\Bree\Admin\FieldTypeRelation;
 use Illuminate\Support\Collection as Collection;
+use Illuminate\Database\Eloquent\Relations;
 
 class InlineStacked extends FieldTypeRelation {
 
@@ -10,6 +11,15 @@ class InlineStacked extends FieldTypeRelation {
 	 */
 	public function field()
 	{
+
+		if($this->relation instanceof Relations\HasMany)
+		{
+
+		}
+		else
+		{
+
+		}
 		$options = '';
 		if($this->data instanceof Collection)
 		{
@@ -22,6 +32,7 @@ class InlineStacked extends FieldTypeRelation {
 		{
 
 		}
+
 		return '<select name="'.$this->name.'">'. $options .'</select>';
 	}
 

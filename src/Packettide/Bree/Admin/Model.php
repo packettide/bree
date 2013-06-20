@@ -49,6 +49,7 @@ class Model {
 			if(class_exists($fieldType))
 			{
 				$data = new $fieldType($key, $data, $field);
+
 				if($this->isRelationField($data))
 				{
 					$data->relation = $this->fetchRelation($key);
@@ -63,7 +64,7 @@ class Model {
 	 */
 	protected function isRelationField($fieldtype)
 	{
-		return ($fieldtype instanceof Packettide\Bree\Admin\FieldTypeRelation) ? true : false;
+		return ($fieldtype instanceof FieldTypeRelation) ? true : false;
 	}
 
 	/*
@@ -140,14 +141,8 @@ class Model {
 		if(isset($this->fields[$key]))
 		{
 			$ft = $this->getField($key, $value, $this->fields[$key]);
-
-			if($this->isRelationField($ft))
-			{
-				$ft->relation = $this->fetchRelation($key);
-			}
-			
-			$ft->save();
-			
+		
+			$ft->save();			
 		}
 		else
 		{
