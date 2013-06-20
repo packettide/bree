@@ -1,9 +1,9 @@
 <?php namespace Packettide\Bree\Admin\FieldTypes;
 
-use Packettide\Bree\Admin\FieldType;
+use Packettide\Bree\Admin\FieldTypeRelation;
 use Illuminate\Support\Collection as Collection;
 
-class InlineStacked extends FieldType {
+class InlineStacked extends FieldTypeRelation {
 
 	/**
 	 *

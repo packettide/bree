@@ -21,6 +21,8 @@ class FieldType {
 		}
 	}
 
+	public function save($params) {}
+
 	public function __get($key) {
 		if(isset($this->options[$key])) 
 		{

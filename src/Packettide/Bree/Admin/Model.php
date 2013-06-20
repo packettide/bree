@@ -110,17 +110,23 @@ class Model {
 
 	public function __set($key, $value)
 	{
-		// if field is relation
-		if($this->fields[$key] == 'InlineStacked')
+		if(isset($this->fields[$key]))
 		{
-			$camelKey = camel_case($key);
+			$ft = $this->getField($key, $value, $this->fields[$key]);
 
-			if (method_exists($this->baseModel, $camelKey))
+			// if field is relation
+			if($this->fields[$key][$type] == 'InlineStacked')
 			{
-				$relation = $this->baseModelInstance->$camelKey();
-
-				$ft = $this->getField($key, $value, 'InlineStacked');
-				$ft->save($relation);
+				$camelKey = camel_case($key);
+				if (method_exists($this->baseModel, $camelKey))
+				{
+					$relation = $this->baseModelInstance->$camelKey();
+					$ft->save($relation);
+				}
+			}
+			else
+			{
+				$ft->save();
 			}
 		}
 		else
