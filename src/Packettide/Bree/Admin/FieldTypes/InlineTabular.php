@@ -3,13 +3,14 @@
 use Packettide\Bree\Admin\FieldTypeRelation;
 use Illuminate\Support\Collection as Collection;
 
-class InlineStacked extends FieldTypeRelation {
+class InlineTabular extends FieldTypeRelation {
 
 	/**
 	 *
 	 */
 	public function field()
 	{
+		//var_dump($this->data);
 		$options = '';
 		if($this->data instanceof Collection)
 		{
@@ -28,15 +29,17 @@ class InlineStacked extends FieldTypeRelation {
 	/**
 	 *
 	 */
-	public function save()
+	public function save($relation)
 	{
-		/* If we have an id let's grab the model instance, otherwise assume we were given it */
-		if(is_numeric($this->data))
+		if(is_array($this->data))
 		{
-			$this->data = $this->related->find($this->data);
+			$relation->saveMany($this->data);
 		}
-
-		$this->relation->save($this->data);
+		else
+		{
+			echo 'here1';
+			$relation->save($this->data);
+		}
 	}
 
 

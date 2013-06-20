@@ -49,9 +49,36 @@ class Model {
 			if(class_exists($fieldType))
 			{
 				$data = new $fieldType($key, $data, $field);
+				if($this->isRelationField($data))
+				{
+					$data->relation = $this->fetchRelation($key);
+				}
 			}
 		}
 		return $data;
+	}
+
+	/*
+	 * Check to see if the given fieldtype is a relation
+	 */
+	protected function isRelationField($fieldtype)
+	{
+		return ($fieldtype instanceof Packettide\Bree\Admin\FieldTypeRelation) ? true : false;
+	}
+
+	/*
+	 * Helper for retrieving relationship object
+	 */
+	protected function fetchRelation($key)
+	{
+		$relation = null;
+		$camelKey = camel_case($key);
+		
+		if (method_exists($this->baseModel, $camelKey))
+		{
+			$relation = $this->baseModelInstance->$camelKey();
+		}
+		return $relation;
 	}
 
 
@@ -114,20 +141,13 @@ class Model {
 		{
 			$ft = $this->getField($key, $value, $this->fields[$key]);
 
-			// if field is relation
-			if($this->fields[$key][$type] == 'InlineStacked')
+			if($this->isRelationField($ft))
 			{
-				$camelKey = camel_case($key);
-				if (method_exists($this->baseModel, $camelKey))
-				{
-					$relation = $this->baseModelInstance->$camelKey();
-					$ft->save($relation);
-				}
+				$ft->relation = $this->fetchRelation($key);
 			}
-			else
-			{
-				$ft->save();
-			}
+			
+			$ft->save();
+			
 		}
 		else
 		{

@@ -21,13 +21,18 @@ class FieldType {
 		}
 	}
 
-	public function save($params) {}
+	public function save() {}
 
 	public function __get($key) {
 		if(isset($this->options[$key])) 
 		{
 			return $this->options[$key];
 		}
+	}
+
+	public function __set($key, $value)
+	{
+		$this->options[$key] = $value;
 	}
 
 	public function __toString()
