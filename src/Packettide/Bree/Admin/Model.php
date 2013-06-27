@@ -97,6 +97,13 @@ class Model {
 			return call_user_func_array(array($this->baseModelInstance, $method), $parameters);
 		}
 
+		// Pass Eloquent static methods through, unfortunately they can't be called in the static context here.
+		if (in_array($method, array('all', 'create', 'query', 'with', 'withTrashed', 'onlyTrashed', 'unguard', 'reguard', 'destroy')))
+		{
+			$instance = new $this->baseModel;
+			return call_user_func_array(array($instance, $method), $parameters);
+		}
+
 		//echo 'here '. $method;
 
 		$query = $this->baseModel->newQuery();
@@ -107,19 +114,20 @@ class Model {
 		return $this;
 	}
 
-	/**
-	 * Handle dynamic static method calls into the method.
-	 *
-	 * @param  string  $method
-	 * @param  array   $parameters
-	 * @return mixed
-	 */
-	public static function __callStatic($method, $parameters)
-	{
-		$instance = new $this->baseModel;
+	// WILL NOT WORK
+	// /**
+	//  * Handle dynamic static method calls into the method.
+	//  *
+	//  * @param  string  $method
+	//  * @param  array   $parameters
+	//  * @return mixed
+	//  */
+	// public static function __callStatic($method, $parameters)
+	// {
+	// 	$instance = $this->baseModel;
 
-		return call_user_func_array(array($instance, $method), $parameters);
-	}
+	// 	return call_user_func_array(array($instance, $method), $parameters);
+	// }
 
 
 	public function __get($key)
