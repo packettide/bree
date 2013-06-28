@@ -19,13 +19,19 @@ class InlineStacked extends FieldTypeRelation {
 		{
 			foreach($available as $row)
 			{
-				$selected = ($chosen->find($row->getKey())) ? 'selected' : ''; //could also use ->contains?
+				$selected = '';
+
+				if($this->relation instanceof Relations\HasMany) 
+				{
+					$selected = ($chosen->contains($row->getKey())) ? 'selected' : '';
+				}
+				else if($row->getKey() == $chosen->getKey()) 
+				{
+					$selected = 'selected';
+				}
+
 				$options .= '<option '. $selected .' value="'. $row->getKey() .'">'. $row->{$this->options['title']} .'</option>';
 			}
-		}
-		else
-		{
-
 		}
 
 		if($this->relation instanceof Relations\HasMany)
