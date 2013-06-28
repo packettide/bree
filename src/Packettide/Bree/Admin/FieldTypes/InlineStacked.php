@@ -19,7 +19,7 @@ class InlineStacked extends FieldTypeRelation {
 		{
 			foreach($available as $row)
 			{
-				$selected = ($chosen->find($row->getKey())) ? 'selected' : '';
+				$selected = ($chosen->find($row->getKey())) ? 'selected' : ''; //could also use ->contains?
 				$options .= '<option '. $selected .' value="'. $row->getKey() .'">'. $row->{$this->options['title']} .'</option>';
 			}
 		}
@@ -30,7 +30,7 @@ class InlineStacked extends FieldTypeRelation {
 
 		if($this->relation instanceof Relations\HasMany)
 		{
-			return '<select multiple name="'.$this->name.'">'. $options .'</select>';
+			return '<select multiple name="'.$this->name.'[]">'. $options .'</select>';
 		}
 		else
 		{
@@ -45,22 +45,30 @@ class InlineStacked extends FieldTypeRelation {
 	 */
 	public function save()
 	{
-		if($this->relation instanceof Relations\HasMany)
-		{
+		if(empty($this->data)) return;
 
+		if($this->relation instanceof Relations\HasMany && is_array($this->data))
+		{
+			if(is_numeric($this->data[0])) // assume we have an array of ids
+			{
+				foreach($this->data as $key => $item)
+				{
+					$this->data[$key] = $this->related->baseModel->find($item);
+				}
+			}
+
+			$this->relation->saveMany($this->data);
+		}
+		/* If we have an id let's grab the model instance, otherwise assume we were given it */
+		else if(is_numeric($this->data))
+		{
+			$this->data = $this->related->baseModel->find($this->data);
 		}
 		else
 		{
-
+			$this->relation->save($this->data);
 		}
 
-		/* If we have an id let's grab the model instance, otherwise assume we were given it */
-		if(is_numeric($this->data))
-		{
-			$this->data = $this->related->find($this->data);
-		}
-
-		$this->relation->save($this->data);
 	}
 
 
