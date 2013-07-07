@@ -6,4 +6,13 @@ use Illuminate\Database\Eloquent\Relations\HasOne;
 
 class FieldInlineStackedTest extends PHPUnit_Framework_TestCase {
 
+	// display
+	public function testDisplay()
+	{
+		
+	}
+
+
+	// save
+
 }
