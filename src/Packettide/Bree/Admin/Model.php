@@ -12,9 +12,6 @@ class Model {
 	{
 		$this->setBaseModel($model);
 		$this->fields = $fields;
-
-		//var_dump($this->baseModel);
-		//var_dump($this->fields);
 	}
 
 
@@ -38,7 +35,7 @@ class Model {
 	}
 
 	/**
-	 *
+	 * Retrieve and setup the FieldType
 	 */
 	public function getField($key, $data, $field)
 	{
