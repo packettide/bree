@@ -27,7 +27,7 @@ class FieldInlineStackedTest extends PHPUnit_Framework_TestCase {
 
 
 	// display
-	public function testDisplay()
+	public function testHasOneDisplay()
 	{
 
 		// $authorAdmin = new AdminModel($this->author, array(
@@ -42,9 +42,38 @@ class FieldInlineStackedTest extends PHPUnit_Framework_TestCase {
 
 		// $model = $bookAdmin->find(1);
 
+		$author1 = new EloquentModelStub(array('id' => 1, 'name' => 'C.S. Lewis'));
+		$author2 = new EloquentModelStub(array('id' => 2, 'name' => 'JRR Tolkien'));
+
+		$available = new Collection(array($author1, $author2));
 
 		$adminModel = m::mock('AdminModel');
-		$adminModel->shouldReceive('all')->once()->andReturn('1');
+		$adminModel->shouldReceive('all')->once()->andReturn($available);
+
+		$relation = m::mock('Relations\HasOne');
+
+		$options = array(
+			'title' => 'name',
+			'label' => 'author',
+			'related' => $adminModel,
+			'relation' => $relation
+		);
+
+		$author = new FieldTypes\InlineStacked('author', $author1, $options);
+
+		// No options passed
+		$this->assertEquals('<select name="author"><option selected value="1">C.S. Lewis</option><option value="2">JRR Tolkien</option></select>', $author->field());
+
+
+		//$model->author = 2;
+
+		//echo $model;
+	}
+
+	public function testHasOneDisplayNoOptions()
+	{
+		$adminModel = m::mock('AdminModel');
+		$adminModel->shouldReceive('all')->once()->andReturn('');
 
 		$relation = m::mock('Relations\HasOne');
 
@@ -59,11 +88,6 @@ class FieldInlineStackedTest extends PHPUnit_Framework_TestCase {
 
 		// No options passed
 		$this->assertEquals('<select name="author"></select>', $author->field());
-
-
-		//$model->author = 2;
-
-		//echo $model;
 	}
 
 

@@ -23,14 +23,14 @@ class InlineStacked extends FieldTypeRelation {
 
 				if($this->relation instanceof Relations\HasMany) 
 				{
-					$selected = ($chosen->contains($row->getKey())) ? 'selected' : '';
+					$selected = ($chosen->contains($row->getKey())) ? 'selected ' : '';
 				}
 				else if($row->getKey() == $chosen->getKey()) 
 				{
-					$selected = 'selected';
+					$selected = 'selected ';
 				}
 
-				$options .= '<option '. $selected .' value="'. $row->getKey() .'">'. $row->{$this->options['title']} .'</option>';
+				$options .= '<option '. $selected .'value="'. $row->getKey() .'">'. $row->{$this->options['title']} .'</option>';
 			}
 		}
 
