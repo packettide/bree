@@ -25,6 +25,33 @@ class FieldInlineStackedTest extends PHPUnit_Framework_TestCase {
 		m::close();
 	}
 
+	public function testHasManyDisplay()
+	{
+		$author1 = new EloquentModelStub(array('id' => 1, 'name' => 'C.S. Lewis'));
+		$author2 = new EloquentModelStub(array('id' => 2, 'name' => 'JRR Tolkien'));
+
+		$available = new Collection(array($author1, $author2));
+		$chosen = $available;
+
+		$adminModel = m::mock('AdminModel');
+		$adminModel->shouldReceive('all')->once()->andReturn($available);
+
+		$relation = m::mock('Relations\HasMany');
+
+		$options = array(
+			'title' => 'name',
+			'label' => 'author',
+			'related' => $adminModel,
+			'relation' => $relation
+		);
+
+		$author = new FieldTypes\InlineStacked('author', $chosen, $options);
+
+		// No options passed
+		$this->assertEquals('<select name="author"><option selected value="1">C.S. Lewis</option><option selected value="2">JRR Tolkien</option></select>', $author->field());
+
+	}
+
 
 	// display
 	public function testHasOneDisplay()

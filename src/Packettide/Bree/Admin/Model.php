@@ -43,6 +43,7 @@ class Model {
 		{
 			//could this be done with some kind of autoloading and exclude the namespace?
 			$fieldType = 'Packettide\Bree\Admin\FieldTypes\\'.$field['type'];
+			
 			if(class_exists($fieldType))
 			{
 				$data = new $fieldType($key, $data, $field);
@@ -79,6 +80,19 @@ class Model {
 		return $relation;
 	}
 
+	/*
+	 * Save any post changes and echo out the form
+	 */
+	public function saveAndDisplay() {
+		if (!empty($_POST)) {
+			foreach ($this->fields as $key => $value) {
+				// $value is not used
+				$this->$key = isset($_POST[$key])? $_POST[$key] : $_FILES[$key];
+			}
+		}
+		$this->save();
+		echo $this;
+	}
 
 	/**
 	 * Handle dynamic method calls into the method.
@@ -111,6 +125,7 @@ class Model {
 		return $this;
 	}
 
+
 	// WILL NOT WORK
 	// /**
 	//  * Handle dynamic static method calls into the method.
@@ -131,7 +146,7 @@ class Model {
 	{
 		$attribute = $this->baseModelInstance->getAttribute($key);
 		//var_dump($attribute[0]);
-		
+		//var_dump($this->fields[$key]);
 		// if a FieldType was passed for this attribute process it
 		if(isset($this->fields[$key]))
 		{
@@ -143,15 +158,12 @@ class Model {
 
 	public function __set($key, $value)
 	{
-		if(isset($this->fields[$key]))
+		$ft = $this->getField($key, $value, $this->fields[$key]);
+		$ft->save();
+
+		if(!$this->isRelationField($ft))
 		{
-			$ft = $this->getField($key, $value, $this->fields[$key]);
-		
-			$ft->save();			
-		}
-		else
-		{
-			$this->baseModelInstance->setAttribute($key, $value);	
+			$this->baseModelInstance->setAttribute($key, $ft->data);
 		}
 	}
 
