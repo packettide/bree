@@ -27,16 +27,27 @@ class FieldInlineStackedTest extends PHPUnit_Framework_TestCase {
 
 	public function testHasManyDisplay()
 	{
-		$author1 = new EloquentModelStub(array('id' => 1, 'name' => 'C.S. Lewis'));
-		$author2 = new EloquentModelStub(array('id' => 2, 'name' => 'JRR Tolkien'));
+		$book1 = new EloquentModelStub(array('id' => 1, 'name' => 'The Horse and His Boy'));
+		$book2 = new EloquentModelStub(array('id' => 2, 'name' => 'The Silver Chair'));
 
-		$available = new Collection(array($author1, $author2));
+		$available = new Collection(array($book1, $book2));
 		$chosen = $available;
 
 		$adminModel = m::mock('AdminModel');
 		$adminModel->shouldReceive('all')->once()->andReturn($available);
 
-		$relation = m::mock('Relations\HasMany');
+		$builder = m::mock('Illuminate\Database\Eloquent\Builder');
+		$builder->shouldReceive('where')->with('books.author_id', '=', 1);
+		$related = m::mock('Illuminate\Database\Eloquent\Model');
+		$builder->shouldReceive('getModel')->andReturn($related);
+		
+		$parent = m::mock('Illuminate\Database\Eloquent\Model');
+		$parent->shouldReceive('getKey')->andReturn(1);
+		$parent->shouldReceive('getCreatedAtColumn')->andReturn('created_at');
+		$parent->shouldReceive('getUpdatedAtColumn')->andReturn('updated_at');
+
+		$relation = new Relations\HasMany($builder, $parent, 'books.author_id');
+
 
 		$options = array(
 			'title' => 'name',
@@ -45,10 +56,9 @@ class FieldInlineStackedTest extends PHPUnit_Framework_TestCase {
 			'relation' => $relation
 		);
 
-		$author = new FieldTypes\InlineStacked('author', $chosen, $options);
+		$books = new FieldTypes\InlineStacked('books', $chosen, $options);
 
-		// No options passed
-		$this->assertEquals('<select name="author"><option selected value="1">C.S. Lewis</option><option selected value="2">JRR Tolkien</option></select>', $author->field());
+		$this->assertEquals('<select multiple name="books[]"><option selected value="1">The Horse and His Boy</option><option selected value="2">The Silver Chair</option></select>', $books->field());
 
 	}
 

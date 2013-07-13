@@ -20,8 +20,7 @@ class InlineStacked extends FieldTypeRelation {
 			foreach($available as $row)
 			{
 				$selected = '';
-				var_dump(is_a($this->relation, 'Relations\HasMany'));
-				var_dump($this->relation instanceof Relations\HasMany);
+
 				if($this->relation instanceof Relations\HasMany) 
 				{
 					$selected = ($chosen->contains($row->getKey())) ? 'selected ' : '';
