@@ -1,4 +1,6 @@
 <?php namespace Packettide\Bree\Admin;
+
+use Packettide\Bree\Admin\FieldType;
 use Illuminate\Database\Eloquent\Model as EloquentModel;
 
 class Model {
@@ -39,7 +41,11 @@ class Model {
 	 */
 	public function getField($key, $data, $field)
 	{
-		if($field['type'])
+		if($field['type'] instanceof FieldType)
+		{
+			$data = $field['type'];
+		}
+		else
 		{
 			//could this be done with some kind of autoloading and exclude the namespace?
 			$fieldType = 'Packettide\Bree\Admin\FieldTypes\\'.$field['type'];
@@ -56,6 +62,7 @@ class Model {
 		}
 		return $data;
 	}
+
 
 	/*
 	 * Check to see if the given fieldtype is a relation
@@ -120,7 +127,7 @@ class Model {
 		$query = $this->baseModel->newQuery();
 
 		// this returns an instance of baseModel
-		$this->baseModelInstance =  call_user_func_array(array($query, $method), $parameters);
+		$this->baseModelInstance = call_user_func_array(array($query, $method), $parameters);
 
 		return $this;
 	}
@@ -163,6 +170,7 @@ class Model {
 
 		if(!$this->isRelationField($ft))
 		{
+			var_dump($ft->data);
 			$this->baseModelInstance->setAttribute($key, $ft->data);
 		}
 	}
