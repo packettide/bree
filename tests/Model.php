@@ -71,8 +71,8 @@ class ModelTest extends PHPUnit_Framework_TestCase {
 		$returnModel->shouldReceive('setAttribute')->once()->with('test', 'testValue');
 
 		$fieldType = m::mock('Packettide\Bree\Admin\FieldType');
-		$fieldType->shouldReceive('save')->once()->andReturn('');
-		$fieldType->data = 'testValue';
+		$fieldType->shouldReceive('save')->once()->andReturn('')->andSet('data', 'testValue');
+		//$fieldType->shouldReceive('__get')->once()->with('data')->andReturn('testValue');
 
 		$this->fields['test']['type'] = $fieldType;
 

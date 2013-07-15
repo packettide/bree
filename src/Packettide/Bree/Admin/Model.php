@@ -170,7 +170,6 @@ class Model {
 
 		if(!$this->isRelationField($ft))
 		{
-			var_dump($ft->data);
 			$this->baseModelInstance->setAttribute($key, $ft->data);
 		}
 	}
