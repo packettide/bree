@@ -66,16 +66,13 @@ class InlineStacked extends FieldTypeRelation {
 
 			$this->relation->saveMany($this->data);
 		}
-		/* If we have an id let's grab the model instance, otherwise assume we were given it */
-		else if(is_numeric($this->data))
-		{
-			$this->data = $this->related->baseModel->find($this->data);
-			$this->relation->associate($this->data); //BelongsTo needs associate, HasOne needs save()
-		}
 		else
 		{
-			$this->relation->save($this->data);
-		}
+			/* If we have an id let's grab the model instance, otherwise assume we were given it */
+			$this->data = (is_numeric($this->data)) ? $this->related->baseModel->find($this->data) : $this->data;
+			parent::saveRelation($this->relation, $this->data);
+			//$this->relation->associate($this->data); //BelongsTo needs associate, HasOne needs save()
+		} 
 
 	}
 

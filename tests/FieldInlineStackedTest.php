@@ -14,7 +14,11 @@ class FieldInlineStackedTest extends PHPUnit_Framework_TestCase {
 	 */
 	public function setUp()
 	{
-		
+		$this->author1 = new EloquentModelStub(array('id' => 1, 'name' => 'C.S. Lewis'));
+		$this->author2 = new EloquentModelStub(array('id' => 2, 'name' => 'JRR Tolkien'));
+
+		$this->book1 = new EloquentModelStub(array('id' => 1, 'name' => 'The Horse and His Boy'));
+		$this->book2 = new EloquentModelStub(array('id' => 2, 'name' => 'The Silver Chair'));
 	}
 
 	/**
@@ -27,10 +31,7 @@ class FieldInlineStackedTest extends PHPUnit_Framework_TestCase {
 
 	public function testHasManyDisplay()
 	{
-		$book1 = new EloquentModelStub(array('id' => 1, 'name' => 'The Horse and His Boy'));
-		$book2 = new EloquentModelStub(array('id' => 2, 'name' => 'The Silver Chair'));
-
-		$available = new Collection(array($book1, $book2));
+		$available = new Collection(array($this->book1, $this->book2));
 		$chosen = $available;
 
 		$adminModel = m::mock('AdminModel');
@@ -59,35 +60,18 @@ class FieldInlineStackedTest extends PHPUnit_Framework_TestCase {
 		$books = new FieldTypes\InlineStacked('books', $chosen, $options);
 
 		$this->assertEquals('<select multiple name="books[]"><option selected value="1">The Horse and His Boy</option><option selected value="2">The Silver Chair</option></select>', $books->field());
-
 	}
 
 
 	// display
-	public function testHasOneDisplay()
+	public function testBelongsToDisplay()
 	{
-
-		// $authorAdmin = new AdminModel($this->author, array(
-		// 	'name'       => array('type' => 'TextArea', 'label' => "Name"),
-		// 	'birth_date' => array('type' => 'Text'),
-		// ));
-
-		// $bookAdmin = new AdminModel($this->book, array(
-		// 	'title' => array('type' => 'Text'),
-		// 	'author' => array('type' => 'InlineStacked', 'related' => $authorAdmin, 'title' => 'name', 'label' => 'Author')
-		// ));
-
-		// $model = $bookAdmin->find(1);
-
-		$author1 = new EloquentModelStub(array('id' => 1, 'name' => 'C.S. Lewis'));
-		$author2 = new EloquentModelStub(array('id' => 2, 'name' => 'JRR Tolkien'));
-
-		$available = new Collection(array($author1, $author2));
+		$available = new Collection(array($this->author1, $this->author2));
 
 		$adminModel = m::mock('AdminModel');
 		$adminModel->shouldReceive('all')->once()->andReturn($available);
 
-		$relation = m::mock('Relations\HasOne');
+		$relation = m::mock('Illuminate\Database\Eloquent\Relations\BelongsTo');
 
 		$options = array(
 			'title' => 'name',
@@ -96,23 +80,18 @@ class FieldInlineStackedTest extends PHPUnit_Framework_TestCase {
 			'relation' => $relation
 		);
 
-		$author = new FieldTypes\InlineStacked('author', $author1, $options);
+		$author = new FieldTypes\InlineStacked('author', $this->author1, $options);
 
-		// No options passed
 		$this->assertEquals('<select name="author"><option selected value="1">C.S. Lewis</option><option value="2">JRR Tolkien</option></select>', $author->field());
-
-
-		//$model->author = 2;
-
-		//echo $model;
 	}
 
-	public function testHasOneDisplayNoOptions()
+
+	public function testBelongsToDisplayNoOptions()
 	{
 		$adminModel = m::mock('AdminModel');
 		$adminModel->shouldReceive('all')->once()->andReturn('');
 
-		$relation = m::mock('Relations\HasOne');
+		$relation = m::mock('Illuminate\Database\Eloquent\Relations\BelongsTo');
 
 		$options = array(
 			'title' => 'name',
@@ -127,6 +106,75 @@ class FieldInlineStackedTest extends PHPUnit_Framework_TestCase {
 		$this->assertEquals('<select name="author"></select>', $author->field());
 	}
 
+	/**
+	 * Test Save Functionality Across Relationships
+	 */
+
+
+	public function testBelongsToSave()
+	{
+		$available = new Collection(array($this->author1, $this->author2));
+
+		$adminModel = m::mock('AdminModel');
+
+		$relation = m::mock('Illuminate\Database\Eloquent\Relations\BelongsTo');
+		$relation->shouldReceive('associate')->once();
+
+		$options = array(
+			'title' => 'name',
+			'label' => 'author',
+			'related' => $adminModel,
+			'relation' => $relation
+		);
+
+		$author = new FieldTypes\InlineStacked('author', $this->author1, $options);
+
+		$author->save();
+
+	}
+
+	public function testHasOneSave()
+	{
+		$available = new Collection(array($this->author1, $this->author2));
+
+		$adminModel = m::mock('AdminModel');
+
+		$relation = m::mock('Illuminate\Database\Eloquent\Relations\HasOne');
+		$relation->shouldReceive('save')->once();
+
+		$options = array(
+			'title' => 'name',
+			'label' => 'author',
+			'related' => $adminModel,
+			'relation' => $relation
+		);
+
+		$author = new FieldTypes\InlineStacked('author', $this->author2, $options);
+
+		$author->save();
+	}
+
+	public function testHasManySave()
+	{
+		$available = new Collection(array($this->author1, $this->author2));
+		$chosen = array($this->author1, $this->author2);
+
+		$adminModel = m::mock('AdminModel');
+
+		$relation = m::mock('Illuminate\Database\Eloquent\Relations\HasMany');
+		$relation->shouldReceive('saveMany')->once();
+
+		$options = array(
+			'title' => 'name',
+			'label' => 'author',
+			'related' => $adminModel,
+			'relation' => $relation
+		);
+
+		$author = new FieldTypes\InlineStacked('author', $chosen, $options);
+
+		$author->save();
+	}
 
 	// save
 
