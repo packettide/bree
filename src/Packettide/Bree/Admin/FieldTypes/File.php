@@ -16,10 +16,19 @@ class File extends FieldType {
 	public function save()
 	{
 		if(empty($this->data)) return;
+		
+		$fileLocation = ($this->directory != '') ? $this->directory : '';
 
-		move_uploaded_file($this->data['tmp_name'], 'test.jpeg');
+		$fileLocation .= $this->data['name'];
 
-		$this->data = $this->data['tmp_name'];
+		if(move_uploaded_file($this->data['tmp_name'], $fileLocation))
+		{
+			$this->data = str_replace(public_path(), '', $fileLocation);
+		}
+		else
+		{
+			// error
+		}
 
 	}
 

@@ -52,8 +52,6 @@ class InlineStacked extends FieldTypeRelation {
 	{
 		if(empty($this->data)) return;
 
-		// var_dump($this->relation);
-		// exit();
 		if($this->relation instanceof Relations\HasMany && is_array($this->data))
 		{
 			if(is_numeric($this->data[0])) // assume we have an array of ids
@@ -70,8 +68,9 @@ class InlineStacked extends FieldTypeRelation {
 		{
 			/* If we have an id let's grab the model instance, otherwise assume we were given it */
 			$this->data = (is_numeric($this->data)) ? $this->related->baseModel->find($this->data) : $this->data;
+
 			parent::saveRelation($this->relation, $this->data);
-			//$this->relation->associate($this->data); //BelongsTo needs associate, HasOne needs save()
+
 		} 
 
 	}
