@@ -106,7 +106,15 @@ class Model {
 		if (!empty($_POST)) {
 			foreach ($this->fields as $key => $value) {
 				// $value is not used
-				$this->$key = isset($_POST[$key])? $_POST[$key] : $_FILES[$key];
+				
+				if(isset($_POST[$key]))
+				{
+					$this->$key = $_POST[$key];
+				}
+				else if(isset($_FILES[$key]) && !empty($_FILES[$key]['tmp_name']))
+				{
+					$this->$key = $_FILES[$key];
+				}
 			}
 		}
 		$this->save();
