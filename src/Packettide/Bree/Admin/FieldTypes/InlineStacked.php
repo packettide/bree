@@ -21,11 +21,11 @@ class InlineStacked extends FieldTypeRelation {
 			{
 				$selected = '';
 
-				if($this->relation instanceof Relations\HasMany) 
+				if($this->relation instanceof Relations\HasMany)
 				{
 					$selected = ($chosen->contains($row->getKey())) ? 'selected ' : '';
 				}
-				else if($row->getKey() == $chosen->getKey()) 
+				else if($chosen && $row->getKey() == $chosen->getKey())
 				{
 					$selected = 'selected ';
 				}

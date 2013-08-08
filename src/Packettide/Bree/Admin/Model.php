@@ -14,6 +14,7 @@ class Model {
 	{
 		$this->setBaseModel($model);
 		$this->fields = $fields;
+		$this->baseModelInstance = $this->baseModel;
 	}
 
 
