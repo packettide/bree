@@ -15,13 +15,14 @@ class InlineStacked extends FieldTypeRelation {
 		$chosen = $this->data;
 		$options = '';
 
+
 		if($available instanceof Collection)
 		{
 			foreach($available as $row)
 			{
 				$selected = '';
 
-				if($this->relation instanceof Relations\HasMany)
+				if($this->hasMultiple())
 				{
 					$selected = ($chosen->contains($row->getKey())) ? 'selected ' : '';
 				}
@@ -34,7 +35,7 @@ class InlineStacked extends FieldTypeRelation {
 			}
 		}
 
-		if($this->relation instanceof Relations\HasMany)
+		if($this->hasMultiple())
 		{
 			return '<select multiple name="'.$this->name.'[]">'. $options .'</select>';
 		}
@@ -63,6 +64,13 @@ class InlineStacked extends FieldTypeRelation {
 			}
 
 			$this->relation->saveMany($this->data);
+		}
+		else if($this->relation instanceof Relations\BelongsToMany && is_array($this->data))
+		{
+			if(is_numeric($this->data[0])) // assume we have an array of ids
+			{
+				$this->relation->sync($this->data);
+			}
 		}
 		else
 		{

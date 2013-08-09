@@ -9,6 +9,7 @@ class FieldTypeRelation extends FieldType {
 		parent::__construct($name, $data, $options);
 	}
 
+
 	public static function saveRelation($relation, $data)
 	{
 		if($relation instanceof Relations\HasOne)
@@ -19,6 +20,34 @@ class FieldTypeRelation extends FieldType {
 		{
 			$relation->associate($data);
 		}
+		else if($relation instanceof Relations\BelongsToMany)
+		{
+
+		}
+	}
+
+	/**
+	 * Check if this FieldTypeRelation can have multiple values
+	 * @return boolean
+	 */
+	public function hasMultiple()
+	{
+		return ($this->relation instanceof Relations\HasMany || $this->relation instanceof Relations\BelongsToMany ) ? true : false;
+	}
+
+
+	/**
+	 * Override parent getter to call getResults() if data hasn't been populated
+	 * @param string $key
+	 * @param string $value
+	 */
+	public function __get($key)
+	{
+		if($key == 'data' && empty($this->options['data']) && isset($this->relation))
+		{
+			$this->options['data'] = $this->relation->getResults();
+		}
+		return parent::__get($key);
 	}
 
 }
