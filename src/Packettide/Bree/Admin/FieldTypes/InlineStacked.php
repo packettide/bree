@@ -20,19 +20,27 @@ class InlineStacked extends FieldTypeRelation {
 		{
 			foreach($available as $row)
 			{
-				$selected = '';
+				$selected = false;
 
 				if($this->hasMultiple())
 				{
-					$selected = ($chosen->contains($row->getKey())) ? 'selected ' : '';
+					if($chosen->contains($row->getKey())) 
+					{
+						$selected = true;
+					}
 				}
-				else if($chosen && $row->getKey() == $chosen->getKey())
+				else if($chosen && $row->getKey() == $chosen->getKey()) //consolidate
 				{
-					$selected = 'selected ';
+					$selected = true;
 				}
 
-				$options .= '<option '. $selected .'value="'. $row->getKey() .'">'. $row->{$this->options['title']} .'</option>';
+				$options .= $this->generateOption($row->getKey(), $row->{$this->options['title']}, $selected);
 			}
+		}
+
+		if($this->select === false)
+		{
+			return $options;
 		}
 
 		if($this->hasMultiple())
@@ -44,6 +52,23 @@ class InlineStacked extends FieldTypeRelation {
 			return '<select name="'.$this->name.'">'. $options .'</select>';
 		}
 		
+	}
+
+	public function generateOption($value, $label, $selected)
+	{
+		if($this->select === false)
+		{
+			$selected = ($selected) ? 'checked="checked" ' : '';
+			$type = ($this->hasMultiple()) ? 'checkbox' : 'radio';
+			$name = ($this->hasMultiple()) ? $this->name .'[]' : $this->name;
+
+			return '<input '. $selected .'type="'. $type .'" name="'. $name .'" value="'. $value . '">'. $label.'<br>';
+		}
+		else
+		{
+			$selected = ($selected) ? 'selected ' : '';
+			return '<option '. $selected .'value="'. $value .'">'. $label .'</option>';
+		}
 	}
 
 	/**
