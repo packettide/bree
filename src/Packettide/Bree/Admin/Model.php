@@ -81,6 +81,14 @@ class Model {
 		return ($fieldtype instanceof FieldTypeRelation) ? true : false;
 	}
 
+	protected function hasRelationField()
+	{
+		$toReturn = false;
+		foreach ($this->fields as $fieldName => $field) {
+			$toReturn = $this->hasRelationField($field['type']) || $toReturn;
+		}
+		return $toReturn;
+	}
 
 	/**
 	 * Helper for retrieving relationship object
@@ -99,6 +107,9 @@ class Model {
 		return $relation;
 	}
 
+	protected function isNew() {
+		return $this->baseModelInstance->id != null;
+	}
 
 	/*
 	 * Save any post changes and echo out the form
@@ -132,6 +143,11 @@ class Model {
 	 */
 	public function __call($method, $parameters)
 	{
+		if ($method == 'save' && $this->hasRelationField() && $this->isNew()) {
+			$tempModel = $this->baseModel->create();
+			$tempModel->save();
+			$this->baseModelInstance->id = $tempModel->id;
+		}
 		if (in_array($method, array('save','increment', 'decrement')))
 		{
 			return call_user_func_array(array($this->baseModelInstance, $method), $parameters);
