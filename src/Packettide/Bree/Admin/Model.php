@@ -194,6 +194,10 @@ class Model {
 	{
 		$ft = $this->getField($key, $value, $this->fields[$key]);
 
+		var_dump($this->isRelationField($ft));
+		var_dump($this->isNew());
+		die;
+
 		if($this->isRelationField($ft) && $this->isNew())
 		{
 			$tempModel = $this->baseModel->create(array());
