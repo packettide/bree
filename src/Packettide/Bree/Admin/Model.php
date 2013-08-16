@@ -128,8 +128,8 @@ class Model {
 					$this->$key = $_FILES[$key];
 				}
 			}
+			$this->save();
 		}
-		$this->save();
 		echo $this;
 	}
 
@@ -193,12 +193,12 @@ class Model {
 	public function __set($key, $value)
 	{
 		$ft = $this->getField($key, $value, $this->fields[$key]);
-
-		if($this->isRelationField($ft['type']) && $this->isNew())
+	
+		if($this->isNew())
 		{
 			$tempModel = $this->baseModel->create(array());
 			$tempModel->save();
-			$this->baseModelInstance->find($tempModel->id);
+			$this->find($tempModel->id);
 		}
 
 		$ft->save();
