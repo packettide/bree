@@ -152,11 +152,11 @@ class Model {
 	 */
 	public function __call($method, $parameters)
 	{
-		if ($method == 'save' && $this->hasRelationField() && $this->isNew()) {
-			$tempModel = $this->baseModel->create();
-			$tempModel->save();
-			$this->baseModelInstance->id = $tempModel->id;
-		}
+		// if ($method == 'save' && $this->hasRelationField() && $this->isNew()) {
+		// 	$tempModel = $this->baseModel->create();
+		// 	$tempModel->save();
+		// 	$this->baseModelInstance->id = $tempModel->id;
+		// }
 		if (in_array($method, array('save','increment', 'decrement')))
 		{
 			return call_user_func_array(array($this->baseModelInstance, $method), $parameters);
