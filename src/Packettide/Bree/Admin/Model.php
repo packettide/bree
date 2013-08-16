@@ -206,14 +206,14 @@ class Model {
 	 */
 	public function __set($key, $value)
 	{
+		$ft = $this->getField($key, $value, $this->fields[$key]);
+
 		if($this->isRelationField($ft) && $this->isNew())
 		{
 			$tempModel = $this->baseModel->create();
 			$tempModel->save();
 			$this->baseModelInstance->id = $tempModel->id;
 		}
-		
-		$ft = $this->getField($key, $value, $this->fields[$key]);
 		$ft->save();
 
 		if(!$this->isRelationField($ft))
