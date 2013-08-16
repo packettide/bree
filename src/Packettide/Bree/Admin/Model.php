@@ -13,7 +13,7 @@ class Model {
 	public function __construct($model, array $fields)
 	{
 		$this->setBaseModel($model);
-		$this->fields = $fields;
+		$this->setModelFields($fields);
 		$this->baseModelInstance = $this->baseModel;
 	}
 
@@ -36,6 +36,15 @@ class Model {
 		{
 			//abort error
 		}
+	}
+
+	public function setModelFields($fields)
+	{
+		if(isset($this->baseModel->breeFields) && is_array($this->baseModel->breeFields))
+		{
+			$fields = array_merge($this->baseModel->breeFields, $fields);
+		}
+		$this->fields = $fields;
 	}
 
 
