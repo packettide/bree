@@ -117,7 +117,7 @@ class Model {
 	}
 
 	protected function isNew() {
-		return $this->baseModelInstance->id != null;
+		return $this->baseModelInstance->id == null;
 	}
 
 	/*
@@ -210,7 +210,7 @@ class Model {
 
 		if($this->isRelationField($ft) && $this->isNew())
 		{
-			$tempModel = $this->baseModel->create();
+			$tempModel = $this->baseModel->create(array());
 			$tempModel->save();
 			$this->baseModelInstance->id = $tempModel->id;
 		}
