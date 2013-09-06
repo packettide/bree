@@ -6,6 +6,15 @@ class FieldTypeRelation extends FieldType {
 
 	public function __construct($name, $data, $options=array())
 	{
+
+		/**
+		 * Make sure the related model is initialized
+		 */
+		if(isset($options['related']) && !($options['related'] instanceof Model))
+		{
+			$options['related'] = new Model($options['related']);
+		}
+
 		parent::__construct($name, $data, $options);
 	}
 
@@ -39,7 +48,6 @@ class FieldTypeRelation extends FieldType {
 	/**
 	 * Override parent getter to call getResults() if data hasn't been populated
 	 * @param string $key
-	 * @param string $value
 	 */
 	public function __get($key)
 	{
@@ -49,5 +57,6 @@ class FieldTypeRelation extends FieldType {
 		}
 		return parent::__get($key);
 	}
+
 
 }

@@ -10,7 +10,7 @@ class Model {
 	public $fields;
 
 
-	public function __construct($model, array $fields)
+	public function __construct($model, array $fields = array())
 	{
 		$this->setBaseModel($model);
 		$this->setModelFields($fields);
@@ -107,7 +107,7 @@ class Model {
 		return $relation;
 	}
 
-	protected function isNew() {
+	public function isNew() {
 		return $this->baseModelInstance->id == null;
 	}
 
@@ -155,7 +155,7 @@ class Model {
 			return call_user_func_array(array($instance, $method), $parameters);
 		}
 
-		//echo 'here '. $method;
+		echo 'here '. $method;
 
 		$query = $this->baseModel->newQuery();
 

@@ -22,6 +22,15 @@ class ModelTest extends PHPUnit_Framework_TestCase {
 		$this->assertInstanceOf('Illuminate\Database\Eloquent\Model', $model->baseModel);
 	}
 
+	public function testModelIsNew()
+	{
+		$baseModel = m::mock('Illuminate\Database\Eloquent\Model');
+		$baseModel->shouldReceive('getAttribute')->once()->andReturn(null);
+		$model = new AdminModel($baseModel, $this->fields);
+		
+		$this->assertEquals(true, $model->isNew());
+	}
+
 	public function testBaseModelCalls()
 	{
 		$baseModel = m::mock('Illuminate\Database\Eloquent\Model');
@@ -67,7 +76,7 @@ class ModelTest extends PHPUnit_Framework_TestCase {
 
 		$queryBuilder->shouldReceive('find')->once()->with(1)->andReturn($returnModel);
 		$baseModel->shouldReceive('newQuery')->once()->andReturn($queryBuilder);
-		//$returnModel->shouldReceive('getAttribute')->once()->with('test')->andReturn('testValue');
+		$returnModel->shouldReceive('getAttribute')->once()->with('id')->andReturn('1');
 		$returnModel->shouldReceive('setAttribute')->once()->with('test', 'testValue');
 
 		$fieldType = m::mock('Packettide\Bree\Admin\FieldType');

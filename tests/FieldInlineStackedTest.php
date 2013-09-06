@@ -37,7 +37,7 @@ class FieldInlineStackedTest extends PHPUnit_Framework_TestCase {
 		$available = new Collection(array($this->book1, $this->book2));
 		$chosen = $available;
 
-		$adminModel = m::mock('AdminModel');
+		$adminModel = m::mock('Packettide\Bree\Admin\Model');
 		$adminModel->shouldReceive('all')->once()->andReturn($available);
 
 		$builder = m::mock('Illuminate\Database\Eloquent\Builder');
@@ -71,7 +71,7 @@ class FieldInlineStackedTest extends PHPUnit_Framework_TestCase {
 	{
 		$available = new Collection(array($this->author1, $this->author2));
 
-		$adminModel = m::mock('AdminModel');
+		$adminModel = m::mock('Packettide\Bree\Admin\Model');
 		$adminModel->shouldReceive('all')->once()->andReturn($available);
 
 		$relation = m::mock('Illuminate\Database\Eloquent\Relations\BelongsTo');
@@ -91,7 +91,7 @@ class FieldInlineStackedTest extends PHPUnit_Framework_TestCase {
 
 	public function testBelongsToDisplayNoOptions()
 	{
-		$adminModel = m::mock('AdminModel');
+		$adminModel = m::mock('Packettide\Bree\Admin\Model');
 		$adminModel->shouldReceive('all')->once()->andReturn('');
 
 		$relation = m::mock('Illuminate\Database\Eloquent\Relations\BelongsTo');
@@ -120,7 +120,7 @@ class FieldInlineStackedTest extends PHPUnit_Framework_TestCase {
 	{
 		$available = new Collection(array($this->author1, $this->author2));
 
-		$adminModel = m::mock('AdminModel');
+		$adminModel = m::mock('Packettide\Bree\Admin\Model');
 
 		$relation = m::mock('Illuminate\Database\Eloquent\Relations\BelongsTo');
 		$relation->shouldReceive('associate')->once();
@@ -142,7 +142,7 @@ class FieldInlineStackedTest extends PHPUnit_Framework_TestCase {
 	{
 		$available = new Collection(array($this->author1, $this->author2));
 
-		$adminModel = m::mock('AdminModel');
+		$adminModel = m::mock('Packettide\Bree\Admin\Model');
 
 		$relation = m::mock('Illuminate\Database\Eloquent\Relations\HasOne');
 		$relation->shouldReceive('save')->once();
@@ -164,7 +164,7 @@ class FieldInlineStackedTest extends PHPUnit_Framework_TestCase {
 		$available = new Collection(array($this->author1, $this->author2));
 		$chosen = array($this->author1, $this->author2);
 
-		$adminModel = m::mock('AdminModel');
+		$adminModel = m::mock('Packettide\Bree\Admin\Model');
 
 		$relation = m::mock('Illuminate\Database\Eloquent\Relations\HasMany');
 		$relation->shouldReceive('saveMany')->once();
