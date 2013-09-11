@@ -1,6 +1,6 @@
-<?php namespace Packettide\Bree\Admin;
+<?php namespace Packettide\Bree;
 
-use Packettide\Bree\Admin\FieldType;
+use Packettide\Bree\FieldType;
 use Illuminate\Database\Eloquent\Model as EloquentModel;
 
 class Model {
@@ -53,7 +53,7 @@ class Model {
 	 * @param  string $key
 	 * @param  string $data
 	 * @param  array $field
-	 * @return Packettide\Bree\Admin\FieldType
+	 * @return Packettide\Bree\FieldType
 	 */
 	public function getField($key, $data, $field)
 	{
@@ -64,7 +64,7 @@ class Model {
 		else
 		{
 			//could this be done with some kind of autoloading and exclude the namespace?
-			$fieldType = 'Packettide\Bree\Admin\FieldTypes\\'.$field['type'];
+			$fieldType = 'Packettide\Bree\FieldTypes\\'.$field['type'];
 			
 			if(class_exists($fieldType))
 			{
@@ -82,7 +82,7 @@ class Model {
 
 	/**
 	 * Check to see if the given fieldtype is a relation
-	 * @param  Packettide\Bree\Admin\FieldType  $fieldtype
+	 * @param  Packettide\Bree\FieldType  $fieldtype
 	 * @return boolean
 	 */
 	protected function isRelationField($fieldtype)
@@ -155,7 +155,7 @@ class Model {
 			return call_user_func_array(array($instance, $method), $parameters);
 		}
 
-		echo 'here '. $method;
+		//echo 'here '. $method;
 
 		$query = $this->baseModel->newQuery();
 

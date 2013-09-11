@@ -1,4 +1,4 @@
-<?php namespace Packettide\Bree\Admin;
+<?php namespace Packettide\Bree;
 
 use Illuminate\Database\Eloquent\Relations;
 

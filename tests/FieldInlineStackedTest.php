@@ -1,8 +1,8 @@
 <?php
 
 use Mockery as m;
-use Packettide\Bree\Admin\FieldTypes;
-use Packettide\Bree\Admin\Model as AdminModel;
+use Packettide\Bree\FieldTypes;
+use Packettide\Bree\Model as BreeModel;
 use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Database\Eloquent\Relations;
 use Illuminate\Database\Eloquent\Model as EloquentModel;
@@ -37,7 +37,7 @@ class FieldInlineStackedTest extends PHPUnit_Framework_TestCase {
 		$available = new Collection(array($this->book1, $this->book2));
 		$chosen = $available;
 
-		$adminModel = m::mock('Packettide\Bree\Admin\Model');
+		$adminModel = m::mock('Packettide\Bree\Model');
 		$adminModel->shouldReceive('all')->once()->andReturn($available);
 
 		$builder = m::mock('Illuminate\Database\Eloquent\Builder');
@@ -71,7 +71,7 @@ class FieldInlineStackedTest extends PHPUnit_Framework_TestCase {
 	{
 		$available = new Collection(array($this->author1, $this->author2));
 
-		$adminModel = m::mock('Packettide\Bree\Admin\Model');
+		$adminModel = m::mock('Packettide\Bree\Model');
 		$adminModel->shouldReceive('all')->once()->andReturn($available);
 
 		$relation = m::mock('Illuminate\Database\Eloquent\Relations\BelongsTo');
@@ -91,7 +91,7 @@ class FieldInlineStackedTest extends PHPUnit_Framework_TestCase {
 
 	public function testBelongsToDisplayNoOptions()
 	{
-		$adminModel = m::mock('Packettide\Bree\Admin\Model');
+		$adminModel = m::mock('Packettide\Bree\Model');
 		$adminModel->shouldReceive('all')->once()->andReturn('');
 
 		$relation = m::mock('Illuminate\Database\Eloquent\Relations\BelongsTo');
@@ -120,7 +120,7 @@ class FieldInlineStackedTest extends PHPUnit_Framework_TestCase {
 	{
 		$available = new Collection(array($this->author1, $this->author2));
 
-		$adminModel = m::mock('Packettide\Bree\Admin\Model');
+		$adminModel = m::mock('Packettide\Bree\Model');
 
 		$relation = m::mock('Illuminate\Database\Eloquent\Relations\BelongsTo');
 		$relation->shouldReceive('associate')->once();
@@ -142,7 +142,7 @@ class FieldInlineStackedTest extends PHPUnit_Framework_TestCase {
 	{
 		$available = new Collection(array($this->author1, $this->author2));
 
-		$adminModel = m::mock('Packettide\Bree\Admin\Model');
+		$adminModel = m::mock('Packettide\Bree\Model');
 
 		$relation = m::mock('Illuminate\Database\Eloquent\Relations\HasOne');
 		$relation->shouldReceive('save')->once();
@@ -164,7 +164,7 @@ class FieldInlineStackedTest extends PHPUnit_Framework_TestCase {
 		$available = new Collection(array($this->author1, $this->author2));
 		$chosen = array($this->author1, $this->author2);
 
-		$adminModel = m::mock('Packettide\Bree\Admin\Model');
+		$adminModel = m::mock('Packettide\Bree\Model');
 
 		$relation = m::mock('Illuminate\Database\Eloquent\Relations\HasMany');
 		$relation->shouldReceive('saveMany')->once();
@@ -190,7 +190,7 @@ class FieldInlineStackedTest extends PHPUnit_Framework_TestCase {
 
 }
 
-//should really stub the AdminModel right? Eloquent has already been tested...
+//should really stub the BreeModel right? Eloquent has already been tested...
 
 class EloquentModelStub extends EloquentModel {
 	protected $table = 'stub';

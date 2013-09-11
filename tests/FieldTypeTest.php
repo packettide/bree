@@ -1,6 +1,6 @@
 <?php
 
-use Packettide\Bree\Admin\FieldType;
+use Packettide\Bree\FieldType;
 
 class FieldTypeTest extends PHPUnit_Framework_TestCase {
 

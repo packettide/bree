@@ -1,6 +1,6 @@
-<?php namespace Packettide\Bree\Admin\FieldTypes;
+<?php namespace Packettide\Bree\FieldTypes;
 
-use Packettide\Bree\Admin\FieldTypeRelation;
+use Packettide\Bree\FieldTypeRelation;
 use Illuminate\Database\Eloquent\Collection as Collection;
 use Illuminate\Database\Eloquent\Relations;
 
