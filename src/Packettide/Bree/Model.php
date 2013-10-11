@@ -9,6 +9,8 @@ class Model {
 	public $baseModelInstance;
 	public $fields;
 
+	protected $fieldsets = array();
+
 
 	public function __construct($model, array $fields = array())
 	{
@@ -64,19 +66,59 @@ class Model {
 		else
 		{
 			//could this be done with some kind of autoloading and exclude the namespace?
-			$fieldType = 'Packettide\Bree\FieldTypes\\'.$field['type'];
+			//$fieldType = 'Packettide\Bree\FieldTypes\\'.$field['type'];
 			
-			if(class_exists($fieldType))
-			{
-				$data = new $fieldType($key, $data, $field);
+			$fieldType = FieldSetProvider::getFieldType($field['type']);
 
-				if($this->isRelationField($data))
-				{
-					$data->relation = $this->fetchRelation($key);
-				}
+			// register $fieldtype with model and favor fieldtype implementations with
+			// popular fieldsets in the model
+			$fieldType = $this->registerFieldType($fieldType);
+			
+			$data = new $fieldType($key, $data, $field);
+
+			if($this->isRelationField($data))
+			{
+				$data->relation = $this->fetchRelation($key);
 			}
+
 		}
 		return $data;
+	}
+
+
+	protected function registerFieldType($fieldType)
+	{
+		if(!is_array($fieldType)) return false;
+
+		$fieldClass = '';
+
+		$numFieldTypes = count($fieldType);
+
+		if($numFieldTypes > 1)
+		{
+			$cur = 1;
+
+			foreach($fieldType as $fieldset => $field)
+			{
+				// If we don't have a fieldclass determined yet and the
+				// fieldset for this current field is in use OR it's our 
+				// last option let's choose it
+				if( !$fieldClass && (in_array($fieldset, $this->fieldsets) || $cur === $numFieldTypes) )
+				{
+					$this->fieldsets = array_merge($this->fieldsets, array_keys($fieldType));
+					$fieldClass = $field;
+				}
+
+				$cur++;
+			}
+		}
+		else
+		{
+			$this->fieldsets = array_merge($this->fieldsets, array_keys($fieldType));
+			$fieldClass = array_pop($fieldType);
+		}
+
+		return $fieldClass;
 	}
 
 
@@ -107,8 +149,17 @@ class Model {
 		return $relation;
 	}
 
-	public function isNew() {
+	public function isNew() 
+	{
 		return $this->baseModelInstance->id == null;
+	}
+
+	public function assets()
+	{
+		foreach($this->fieldsets as $fieldset)
+		{
+			var_dump($fieldset::assets());
+		}
 	}
 
 	/*

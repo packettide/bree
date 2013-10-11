@@ -28,6 +28,19 @@ class BreeServiceProvider extends ServiceProvider {
 	 */
 	public function register()
 	{
+	
+		// Register the Basic + Advanced FieldSets
+		FieldSetProvider::register('Packettide\Bree\FieldSets\BasicFieldSet');
+		FieldSetProvider::register('Packettide\Bree\FieldSets\AdvancedFieldSet');
+		
+		// Attach first party fields 
+		FieldSetProvider::attachFields('basic', array(
+			'Text' => 'Packettide\Bree\FieldTypes\Text',
+			'TextArea' => 'Packettide\Bree\FieldTypes\TextArea',
+			'InlineStacked' => 'Packettide\Bree\FieldTypes\InlineStacked',
+			'File' => 'Packettide\Bree\FieldTypes\File'
+		));
+
 		$this->app['bree'] = $this->app->share(function($app)
 		{
 			return new Model;
