@@ -46,6 +46,15 @@ class Model {
 		{
 			$fields = array_merge($this->baseModel->breeFields, $fields);
 		}
+		
+		foreach($fields as &$field)
+		{
+			$field['_bree_field_class'] = $this->resolveFieldClass($field['type']);
+			// var_dump($field);
+			// echo $this->resolveFieldClass($field['type']);
+		}
+		// var_dump($fields);
+
 		$this->fields = $fields;
 	}
 
@@ -59,30 +68,36 @@ class Model {
 	 */
 	public function getField($key, $data, $field)
 	{
-		if($field['type'] instanceof FieldType)
+		// Check and see if this field has been preloaded
+		// this should be the preferred method
+		if(isset($field['_bree_field_class']))
 		{
-			$data = $field['type'];
+			$fieldType = $field['_bree_field_class'];
 		}
 		else
 		{
-			//could this be done with some kind of autoloading and exclude the namespace?
-			//$fieldType = 'Packettide\Bree\FieldTypes\\'.$field['type'];
-			
-			$fieldType = FieldSetProvider::getFieldType($field['type']);
-
-			// register $fieldtype with model and favor fieldtype implementations with
-			// popular fieldsets in the model
-			$fieldType = $this->registerFieldType($fieldType);
-			
-			$data = new $fieldType($key, $data, $field);
-
-			if($this->isRelationField($data))
-			{
-				$data->relation = $this->fetchRelation($key);
-			}
-
+			$fieldType = $this->resolveFieldClass($field['type']);
 		}
+
+		$data = new $fieldType($key, $data, $field);
+
+		if($this->isRelationField($data))
+		{
+			$data->relation = $this->fetchRelation($key);
+		}
+
 		return $data;
+	}
+
+	public function resolveFieldClass($fieldtype)
+	{
+		$fieldType = FieldSetProvider::getFieldType($fieldtype);
+
+		// register $fieldtype with model and favor fieldtype implementations 
+		// with popular fieldsets in the model
+		$fieldClass = $this->registerFieldType($fieldType);
+
+		return $fieldClass;
 	}
 
 
@@ -94,7 +109,7 @@ class Model {
 
 		$numFieldTypes = count($fieldType);
 
-		if($numFieldTypes > 1)
+		if($numFieldTypes)
 		{
 			$cur = 1;
 
@@ -105,17 +120,15 @@ class Model {
 				// last option let's choose it
 				if( !$fieldClass && (in_array($fieldset, $this->fieldsets) || $cur === $numFieldTypes) )
 				{
-					$this->fieldsets = array_merge($this->fieldsets, array_keys($fieldType));
+					if(!in_array($fieldset, $this->fieldsets)){
+						$this->fieldsets = array_merge($this->fieldsets, array($fieldset));
+					}
+					
 					$fieldClass = $field;
 				}
 
 				$cur++;
 			}
-		}
-		else
-		{
-			$this->fieldsets = array_merge($this->fieldsets, array_keys($fieldType));
-			$fieldClass = array_pop($fieldType);
 		}
 
 		return $fieldClass;
@@ -156,10 +169,30 @@ class Model {
 
 	public function assets()
 	{
+		$assets = array();
+
 		foreach($this->fieldsets as $fieldset)
 		{
-			var_dump($fieldset::assets());
+			$fieldSetAssets = FieldSetProvider::get($fieldset)->assets();
+
+			if($fieldSetAssets)
+			{
+				$assets = array_merge_recursive($assets, $fieldSetAssets);
+			}
 		}
+
+		//var_dump($assets);
+
+		$output = '';
+		foreach($assets as $assetType => $assetGroup)
+		{
+			foreach($assetGroup as $asset)
+			{
+				$output .= $asset . "\n";
+			}
+		}
+
+		return $output;
 	}
 
 	/*
@@ -268,6 +301,8 @@ class Model {
 	public function __toString()
 	{
 		$output = '';
+
+		$output .= $this->assets();
 
 		foreach($this->fields as $field => $type)
 		{

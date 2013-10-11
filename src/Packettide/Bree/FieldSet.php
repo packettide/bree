@@ -3,8 +3,9 @@
 abstract class FieldSet {
 
 	protected $fieldtypes = array();
-	protected static $assets = array();
-	protected static $assetsPublished = array();
+	protected $assets = array();
+	protected $assetsPublished = array();
+	public $name;
 
 
 	public function attach($fieldtypes = array())
@@ -24,9 +25,8 @@ abstract class FieldSet {
 		return $fieldtype;
 	}
 
-	public static function sortAssets()
+	public function sortAssets($assets)
 	{
-		$assets = static::$assets;
 		$sorted = array();
 
 		// extract extension and group assets
@@ -41,37 +41,69 @@ abstract class FieldSet {
 			}
 		}
 
-		static::$assets = $sorted;
+		return $sorted;
 	}
 
-	public static function assets()
+	public function assets()
 	{
-		if(!isset(static::$assetsPublished[static::getName()]))
+		$assets = array();
+
+		if(!isset($this->assetsPublished[$this->getName()]))
 		{
-			static::$assetsPublished[static::getName()] = true;
-			return static::publishAssets();
+			$this->assetsPublished[$this->getName()] = true;
+			$assets = $this->publishAssets();
 		}
+
+		return $assets;
 	}
 
-	public static function publishAssets()
+	public function publishAssets()
 	{
-		$includes = '';
+		$allAssets = array_merge_recursive($this->fieldSetAssets(), $this->fieldTypeAssets());
+		return $allAssets;
+	}
 
-		foreach(static::$assets as $assetType => $assets)
+	public function fieldSetAssets()
+	{
+		$paths = array();
+		$assetCollection = $this->sortAssets($this->assets);
+
+		foreach($assetCollection as $assetType => $assets)
 		{
 			foreach($assets as $asset)
 			{
-
-				$includes .= static::generateAssetLink($assetType, $asset) ."\n";
+				$paths[$assetType][] = $this->generateAssetLink($assetType, $asset );
 			}
 		}
-		return $includes;
+
+		return $paths;
 	}
 
-	public static function generateAssetLink($type, $filename)
+	public function fieldTypeAssets()
+	{
+		$paths = array();
+
+		foreach($this->fieldtypes as $fieldtype)
+		{
+			// @todo Abstract this out to a helper method, same as above for fieldsets
+			$assetCollection = $this->sortAssets($fieldtype::assets());
+
+			foreach($assetCollection as $assetType => $assets)
+			{
+				foreach($assets as $asset)
+				{
+					$paths[$assetType][] = $this->generateAssetLink($assetType, $asset );
+				}
+			}
+		}
+		
+		return $paths;
+	}
+
+	public function generateAssetLink($type, $filename)
 	{
 		$link = '';
-		$filename = asset('packages/packettide/bree/'.$filename);
+		$filename = asset($filename);
 
 		switch ($type) {
 			case 'css':
@@ -85,7 +117,9 @@ abstract class FieldSet {
 		return $link;
 	}
 
-	abstract public static function getName();
+	public function getName() {
+		return $this->name;
+	}
 
 
 }

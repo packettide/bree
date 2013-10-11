@@ -6,8 +6,8 @@ class FieldType {
 	public $data;
 	public $options;
 	public $extra;
-
 	protected $reservedOptions = array('label' => '', 'name' => '', 'type' => '');
+	protected static $assets = array();
 
 	public function __construct($name, $data, $options=array())
 	{
@@ -32,8 +32,12 @@ class FieldType {
 
 	public function save() {}
 
+	public static function assets() {
+		return static::$assets;
+	}
+
 	public function __get($key) {
-		if(isset($this->options[$key])) 
+		if(isset($this->options[$key]))
 		{
 			return $this->options[$key];
 		}
@@ -48,7 +52,6 @@ class FieldType {
 	{
 		return $this->label() . $this->field();
 	}
-
 
 
 }

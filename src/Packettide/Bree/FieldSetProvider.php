@@ -15,7 +15,6 @@ class FieldSetProvider {
 		if(!is_object($fieldset) && class_exists($fieldset))
 		{
 			$fieldset = new $fieldset;
-			$fieldset::sortAssets();
 		}
 		
 		self::addFieldSet($fieldset);
@@ -50,6 +49,14 @@ class FieldSetProvider {
 		return self::$fieldsets;
 	}
 
+	public static function get($fieldSetName)
+	{
+		if(array_key_exists($fieldSetName, self::$fieldsets))
+		{
+			return self::$fieldsets[$fieldSetName];	
+		}
+	}
+
 
 	public static function getFieldType($name)
 	{
@@ -64,7 +71,7 @@ class FieldSetProvider {
 			
 			if($fieldtype)
 			{
-				$fieldtypes[$fieldset::getName()] = $fieldtype;
+				$fieldtypes[$fieldset->getName()] = $fieldtype;
 			}
 		}
 
@@ -76,9 +83,9 @@ class FieldSetProvider {
 	{
 		if( !($fieldset instanceof FieldSet) ) echo 'error - fieldset not recognized';
 
-		if(!array_key_exists($fieldset::getName(), self::$fieldsets))
+		if(!array_key_exists($fieldset->getName(), self::$fieldsets))
 		{
-			self::$fieldsets[$fieldset::getName()] = $fieldset;
+			self::$fieldsets[$fieldset->getName()] = $fieldset;
 		}
 		else
 		{

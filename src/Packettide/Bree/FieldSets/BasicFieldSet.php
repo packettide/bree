@@ -4,9 +4,6 @@ use Packettide\Bree\FieldSet;
 
 class BasicFieldSet extends FieldSet {
 
-	public static function getName()
-	{
-		return 'basic';
-	}
+	public $name = 'basic';
 
 }

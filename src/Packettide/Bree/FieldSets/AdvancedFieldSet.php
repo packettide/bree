@@ -4,14 +4,11 @@ use Packettide\Bree\FieldSet;
 
 class AdvancedFieldSet extends FieldSet {
 
-	public static $assets = array(
-			'jquery.min.js',
-			'handlebars.js'
+	public $assets = array(
+			'packages/packettide/bree/jquery.min.js',
+			'packages/packettide/bree/handlebars.js'
 		);
 
-	public static function getName()
-	{
-		return 'advanced';
-	}
+	public $name = 'advanced';
 
 }
