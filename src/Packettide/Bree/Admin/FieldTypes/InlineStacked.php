@@ -29,7 +29,7 @@ class InlineStacked extends FieldTypeRelation {
 						$selected = true;
 					}
 				}
-				else if($chosen && $row->getKey() == $chosen->getKey()) //consolidate
+				else if($chosen && $row->getKey() == $chosen) //consolidate
 				{
 					$selected = true;
 				}
