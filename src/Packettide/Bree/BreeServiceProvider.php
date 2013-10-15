@@ -28,7 +28,16 @@ class BreeServiceProvider extends ServiceProvider {
 	 */
 	public function register()
 	{
-		//
+		$this->app['bree'] = $this->app->share(function($app)
+		{
+			return new Model;
+		});
+
+		$this->app->booting(function()
+		{
+			$loader = \Illuminate\Foundation\AliasLoader::getInstance();
+			$loader->alias('Bree', 'Packettide\Bree\Model');
+		});
 	}
 
 	/**
@@ -38,7 +47,7 @@ class BreeServiceProvider extends ServiceProvider {
 	 */
 	public function provides()
 	{
-		return array();
+		return array('bree');
 	}
 
 }

@@ -1,4 +1,4 @@
-<?php namespace Packettide\Bree\Admin;
+<?php namespace Packettide\Bree;
 
 class FieldType {
 

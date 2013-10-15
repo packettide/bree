@@ -1,6 +1,6 @@
-<?php namespace Packettide\Bree\Admin\FieldTypes;
+<?php namespace Packettide\Bree\FieldTypes;
 
-use Packettide\Bree\Admin\FieldType;
+use Packettide\Bree\FieldType;
 
 class Text extends FieldType {
 
