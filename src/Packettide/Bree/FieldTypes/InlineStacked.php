@@ -9,8 +9,14 @@ class InlineStacked extends FieldTypeRelation {
 	/**
 	 *
 	 */
-	public function field()
+	public function field($extra = array())
 	{
+		$extra = array_merge($extra, $this->extra);
+		$attrs = "";
+		foreach ($extra as $key => $value) {
+			$attrs .= "$key=\"$value\"";
+		}
+
 		$available = $this->related->all();
 		$chosen = $this->data;
 		$options = '';
@@ -45,11 +51,11 @@ class InlineStacked extends FieldTypeRelation {
 
 		if($this->hasMultiple())
 		{
-			return '<select multiple name="'.$this->name.'[]">'. $options .'</select>';
+			return '<select multiple name="'.$this->name.'[]" id="'.$this->name.'" '.$attrs.' >'. $options .'</select>';
 		}
 		else
 		{
-			return '<select name="'.$this->name.'">'. $options .'</select>';
+			return '<select name="'.$this->name.'" id="'.$this->name.'" '.$attrs.' >'. $options .'</select>';
 		}
 		
 	}

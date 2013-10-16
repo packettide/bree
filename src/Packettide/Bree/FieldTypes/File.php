@@ -4,10 +4,16 @@ use Packettide\Bree\FieldType;
 
 class File extends FieldType {
 
-	public function field()
+	public function field($extra = array())
 	{
+		$extra = array_merge($extra, $this->extra);
+		$attrs = "";
+		foreach ($extra as $key => $value) {
+			$attrs .= "$key=\"$value\"";
+		}
+
 		// return Form::text($name, $data);
-		return '<input type="file" name="'.$this->name.'" />';
+		return '<input type="file" name="'.$this->name.'" id="'.$this->name.'" '.$attrs.' />';
 	}
 
 	/**

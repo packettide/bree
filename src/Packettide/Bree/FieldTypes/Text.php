@@ -4,10 +4,14 @@ use Packettide\Bree\FieldType;
 
 class Text extends FieldType {
 
-	public function field()
+	public function field($extra = array())
 	{
-		// return Form::text($name, $data);
-		return '<input name="'.$this->name.'" value="'.$this->data.'" />';
+		$extra = array_merge($extra, $this->extra);
+		$attrs = "";
+		foreach ($extra as $key => $value) {
+			$attrs .= "$key=\"$value\"";
+		}
+		return '<input name="'.$this->name.'" value="'.$this->data.'"  id="'.$this->name.'" '.$attrs.' />';
 	}
 
 

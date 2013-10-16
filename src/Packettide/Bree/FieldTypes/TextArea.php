@@ -4,9 +4,14 @@ use Packettide\Bree\FieldType;
 
 class TextArea extends FieldType {
 
-	public function field()
+	public function field($extra = array())
 	{
-		return '<textarea name="'.$this->name.'">'.$this->data.'</textarea>';
+		$extra = array_merge($extra, $this->extra);
+		$attrs = "";
+		foreach ($extra as $key => $value) {
+			$attrs .= "$key=\"$value\"";
+		}
+		return '<textarea name="'.$this->name.'" id="'.$this->name.'" '.$attrs.' >'.$this->data.'</textarea>';
 	}
 
 

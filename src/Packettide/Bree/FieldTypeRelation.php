@@ -4,6 +4,8 @@ use Illuminate\Database\Eloquent\Relations;
 
 class FieldTypeRelation extends FieldType {
 
+	protected $reservedOptions = array('label' => '', 'name' => '', 'type' => '', 'related' => '', 'title' => '');
+
 	public function __construct($name, $data, $options=array())
 	{
 

@@ -5,15 +5,19 @@ class FieldType {
 	public $name;
 	public $data;
 	public $options;
+	public $extra;
+
+	protected $reservedOptions = array('label' => '', 'name' => '', 'type' => '');
 
 	public function __construct($name, $data, $options=array())
 	{
 		$this->name = $name;
 		$this->data = $data;
 		$this->options = $options;
+		$this->extra = array_diff_key($options, $this->reservedOptions);
 	}
 
-	public function field() {}
+	public function field($extra = array()) {}
 
 	public function label() {
 		if(isset($this->options['label']))
