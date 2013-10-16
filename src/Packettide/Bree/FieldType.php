@@ -19,10 +19,14 @@ class FieldType {
 
 	public function field($extra = array()) {}
 
-	public function label() {
+	public function label($extra = array()) {
+		$attrs = "";
+		foreach ($extra as $key => $value) {
+			$attrs .= "$key=\"$value\"";
+		}
 		if(isset($this->options['label']))
 		{
-			return '<label for="'.$this->name.'">'.$this->options['label'].'</label>';
+			return '<label for="'.$this->name.'" '.$attrs.' >'.$this->options['label'].'</label>';
 		}
 	}
 
