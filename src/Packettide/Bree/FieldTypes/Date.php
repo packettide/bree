@@ -11,7 +11,7 @@ class Date extends FieldType {
 		foreach ($extra as $key => $value) {
 			$attrs .= "$key=\"$value\"";
 		}
-		return '<input name="'.$this->name.'" value="'.$this->data.'"  id="'.$this->name.'" '.$attrs.' type="time" />';
+		return '<input name="'.$this->name.'" value="'.$this->data.'"  id="'.$this->name.'" '.$attrs.' type="date" />';
 	}
 
 
