@@ -6,14 +6,10 @@ class File extends FieldType {
 
 	public function field($extra = array())
 	{
-		$extra = array_merge($extra, $this->extra);
-		$attrs = "";
-		foreach ($extra as $key => $value) {
-			$attrs .= "$key=\"$value\"";
-		}
+		$attrs = $this->getFieldAttributes($extra);
 
 		// return Form::text($name, $data);
-		return '<input type="file" name="'.$this->name.'" id="'.$this->name.'" '.$attrs.' />';
+		return '<input type="file" name="'.$this->name.'" id="'.$this->name.'"'.$attrs.'/>';
 	}
 
 	/**
@@ -22,7 +18,7 @@ class File extends FieldType {
 	public function save()
 	{
 		if(empty($this->data)) return;
-		
+
 		$fileLocation = ($this->directory != '') ? $this->directory : '';
 
 		$fileLocation .= $this->data['name'];

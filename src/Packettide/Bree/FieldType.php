@@ -6,7 +6,7 @@ class FieldType {
 	public $data;
 	public $options;
 	public $extra;
-	protected $reservedOptions = array('label' => '', 'name' => '', 'type' => '');
+	protected $reservedOptions = array('label' => '', 'name' => '', 'type' => '', 'relation' => '', '_bree_field_class' => '');
 	protected static $assets = array();
 
 	public function __construct($name, $data, $options=array())
@@ -31,6 +31,30 @@ class FieldType {
 	}
 
 	public function save() {}
+
+	protected function getFieldAttributes($extra = array())
+	{
+		$extra = array_merge($extra, $this->extra);
+
+		// need to remove any reserved attributes here
+		$extra = array_diff_key($extra, $this->reservedOptions);
+		$attrs = "";
+
+		if($extra)
+		{
+			foreach ($extra as $key => $value) {
+				$attrs .= "$key=\"$value\"";
+			}
+		}
+
+		// we might as well export reserved attributes here
+		// would be great to have "hidden" attributes as well (ex: "_bree_field_class")
+
+		// pad the attributes string
+		if($attrs) $attrs = ' '.$attrs.' ';
+
+		return $attrs;
+	}
 
 	public static function assets() {
 		return static::$assets;

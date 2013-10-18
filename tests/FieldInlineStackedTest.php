@@ -44,7 +44,7 @@ class FieldInlineStackedTest extends PHPUnit_Framework_TestCase {
 		$builder->shouldReceive('where')->with('books.author_id', '=', 1);
 		$related = m::mock('Illuminate\Database\Eloquent\Model');
 		$builder->shouldReceive('getModel')->andReturn($related);
-		
+
 		$parent = m::mock('Illuminate\Database\Eloquent\Model');
 		$parent->shouldReceive('getKey')->andReturn(1);
 		$parent->shouldReceive('getCreatedAtColumn')->andReturn('created_at');
@@ -62,7 +62,7 @@ class FieldInlineStackedTest extends PHPUnit_Framework_TestCase {
 
 		$books = new FieldTypes\InlineStacked('books', $chosen, $options);
 
-		$this->assertEquals('<select multiple name="books[]"><option selected value="1">The Horse and His Boy</option><option selected value="2">The Silver Chair</option></select>', $books->field());
+		$this->assertEquals('<select multiple name="books[]" id="books"><option selected value="1">The Horse and His Boy</option><option selected value="2">The Silver Chair</option></select>', $books->field());
 	}
 
 
@@ -83,9 +83,9 @@ class FieldInlineStackedTest extends PHPUnit_Framework_TestCase {
 			'relation' => $relation
 		);
 
-		$author = new FieldTypes\InlineStacked('author', $this->author1, $options);
+		$author = new FieldTypes\InlineStacked('author', 1, $options);
 
-		$this->assertEquals('<select name="author"><option selected value="1">C.S. Lewis</option><option value="2">JRR Tolkien</option></select>', $author->field());
+		$this->assertEquals('<select name="author" id="author"><option selected value="1">C.S. Lewis</option><option value="2">JRR Tolkien</option></select>', $author->field());
 	}
 
 
@@ -106,7 +106,7 @@ class FieldInlineStackedTest extends PHPUnit_Framework_TestCase {
 		$author = new FieldTypes\InlineStacked('author', '', $options);
 
 		// No options passed
-		$this->assertEquals('<select name="author"></select>', $author->field());
+		$this->assertEquals('<select name="author" id="author"></select>', $author->field());
 	}
 
 	/**

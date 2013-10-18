@@ -6,12 +6,8 @@ class Date extends FieldType {
 
 	public function field($extra = array())
 	{
-		$extra = array_merge($extra, $this->extra);
-		$attrs = "";
-		foreach ($extra as $key => $value) {
-			$attrs .= "$key=\"$value\"";
-		}
-		return '<input name="'.$this->name.'" value="'.$this->data.'"  id="'.$this->name.'" '.$attrs.' type="date" />';
+		$attrs = $this->getFieldAttributes($extra);
+		return '<input name="'.$this->name.'" value="'.$this->data.'"  id="'.$this->name.'"'.$attrs.'type="date" />';
 	}
 
 

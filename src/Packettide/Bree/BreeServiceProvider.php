@@ -28,15 +28,17 @@ class BreeServiceProvider extends ServiceProvider {
 	 */
 	public function register()
 	{
-	
+
 		// Register the Basic + Advanced FieldSets
 		FieldSetProvider::register('Packettide\Bree\FieldSets\BasicFieldSet');
 		FieldSetProvider::register('Packettide\Bree\FieldSets\AdvancedFieldSet');
-		
-		// Attach first party fields 
+
+		// Attach first party fields
 		FieldSetProvider::attachFields('basic', array(
 			'Text' => 'Packettide\Bree\FieldTypes\Text',
 			'TextArea' => 'Packettide\Bree\FieldTypes\TextArea',
+			'Wysiwyg' => 'Packettide\Bree\FieldTypes\TextArea',
+			'Matrix' => 'Packettide\Bree\FieldTypes\None',
 			'InlineStacked' => 'Packettide\Bree\FieldTypes\InlineStacked',
 			'File' => 'Packettide\Bree\FieldTypes\File'
 		));

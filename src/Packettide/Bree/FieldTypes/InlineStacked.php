@@ -11,11 +11,7 @@ class InlineStacked extends FieldTypeRelation {
 	 */
 	public function field($extra = array())
 	{
-		$extra = array_merge($extra, $this->extra);
-		$attrs = "";
-		foreach ($extra as $key => $value) {
-			$attrs .= "$key=\"$value\"";
-		}
+		$attrs = $this->getFieldAttributes($extra);
 
 		$available = $this->related->all();
 		$chosen = $this->data;
@@ -30,7 +26,7 @@ class InlineStacked extends FieldTypeRelation {
 
 				if($this->hasMultiple())
 				{
-					if($chosen->contains($row->getKey())) 
+					if($chosen->contains($row->getKey()))
 					{
 						$selected = true;
 					}
@@ -51,13 +47,13 @@ class InlineStacked extends FieldTypeRelation {
 
 		if($this->hasMultiple())
 		{
-			return '<select multiple name="'.$this->name.'[]" id="'.$this->name.'" '.$attrs.' >'. $options .'</select>';
+			return '<select multiple name="'.$this->name.'[]" id="'.$this->name.'"'.$attrs.'>'. $options .'</select>';
 		}
 		else
 		{
-			return '<select name="'.$this->name.'" id="'.$this->name.'" '.$attrs.' >'. $options .'</select>';
+			return '<select name="'.$this->name.'" id="'.$this->name.'"'.$attrs.'>'. $options .'</select>';
 		}
-		
+
 	}
 
 	public function generateOption($value, $label, $selected)
@@ -110,7 +106,7 @@ class InlineStacked extends FieldTypeRelation {
 
 			parent::saveRelation($this->relation, $this->data);
 
-		} 
+		}
 
 	}
 

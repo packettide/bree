@@ -10,12 +10,8 @@ class InlineTabular extends FieldTypeRelation {
 	 */
 	public function field($extra = array())
 	{
-		$extra = array_merge($extra, $this->extra);
-		$attrs = "";
-		foreach ($extra as $key => $value) {
-			$attrs .= "$key=\"$value\"";
-		}
-		
+		$attrs = $this->getFieldAttributes($extra);
+
 		$options = '';
 		if($this->data instanceof Collection)
 		{
