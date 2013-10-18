@@ -27,7 +27,7 @@ class ModelTest extends PHPUnit_Framework_TestCase {
 		$baseModel = m::mock('Illuminate\Database\Eloquent\Model');
 		$baseModel->shouldReceive('getAttribute')->once()->andReturn(null);
 		$model = new BreeModel($baseModel, $this->fields);
-		
+
 		$this->assertEquals(true, $model->isNew());
 	}
 
@@ -47,7 +47,7 @@ class ModelTest extends PHPUnit_Framework_TestCase {
 		$this->assertSame($returnModel, $model->baseModelInstance);
 	}
 
-	public function testFieldGet()
+	public function testFieldGetValue()
 	{
 		$baseModel = m::mock('Illuminate\Database\Eloquent\Model');
 		$returnModel = m::mock('Illuminate\Database\Eloquent\Model');
@@ -68,7 +68,7 @@ class ModelTest extends PHPUnit_Framework_TestCase {
 		$this->assertEquals('<fieldtype>', $model->test);
 	}
 
-	public function testFieldSet()
+	public function testFieldSetValue()
 	{
 		$baseModel = m::mock('Illuminate\Database\Eloquent\Model');
 		$returnModel = m::mock('Illuminate\Database\Eloquent\Model');

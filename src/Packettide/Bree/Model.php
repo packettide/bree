@@ -46,7 +46,7 @@ class Model {
 		{
 			$fields = array_merge($this->baseModel->breeFields, $fields);
 		}
-		
+
 		foreach($fields as &$field)
 		{
 			$field['_bree_field_class'] = $this->resolveFieldClass($field['type']);
@@ -68,24 +68,30 @@ class Model {
 	 */
 	public function getField($key, $data, $field)
 	{
-		// Check and see if this field has been preloaded
-		// this should be the preferred method
-		if(isset($field['_bree_field_class']))
-		{
-			$fieldType = $field['_bree_field_class'];
-		}
-		else
-		{
-			$fieldType = $this->resolveFieldClass($field['type']);
-		}
+		if($field['type'] instanceof FieldType)
+        {
+            $data = $field['type'];
+        }
+        else
+        {
+			// Check and see if this field has been preloaded
+			// this should be the preferred method
+			if(isset($field['_bree_field_class']))
+			{
+				$fieldType = $field['_bree_field_class'];
+			}
+			else
+			{
+				$fieldType = $this->resolveFieldClass($field['type']);
+			}
 
-		$data = new $fieldType($key, $data, $field);
+			$data = new $fieldType($key, $data, $field);
 
-		if($this->isRelationField($data))
-		{
-			$data->relation = $this->fetchRelation($key);
+			if($this->isRelationField($data))
+			{
+				$data->relation = $this->fetchRelation($key);
+			}
 		}
-
 		return $data;
 	}
 
@@ -93,7 +99,7 @@ class Model {
 	{
 		$fieldType = FieldSetProvider::getFieldType($fieldtype);
 
-		// register $fieldtype with model and favor fieldtype implementations 
+		// register $fieldtype with model and favor fieldtype implementations
 		// with popular fieldsets in the model
 		$fieldClass = $this->registerFieldType($fieldType);
 
@@ -116,14 +122,14 @@ class Model {
 			foreach($fieldType as $fieldset => $field)
 			{
 				// If we don't have a fieldclass determined yet and the
-				// fieldset for this current field is in use OR it's our 
+				// fieldset for this current field is in use OR it's our
 				// last option let's choose it
 				if( !$fieldClass && (in_array($fieldset, $this->fieldsets) || $cur === $numFieldTypes) )
 				{
 					if(!in_array($fieldset, $this->fieldsets)){
 						$this->fieldsets = array_merge($this->fieldsets, array($fieldset));
 					}
-					
+
 					$fieldClass = $field;
 				}
 
@@ -154,7 +160,7 @@ class Model {
 	{
 		$relation = null;
 		$camelKey = camel_case($key);
-		
+
 		if (method_exists($this->baseModel, $camelKey))
 		{
 			$relation = $this->baseModelInstance->$camelKey();
@@ -162,7 +168,7 @@ class Model {
 		return $relation;
 	}
 
-	public function isNew() 
+	public function isNew()
 	{
 		return $this->baseModelInstance->id == null;
 	}
@@ -202,7 +208,7 @@ class Model {
 		if (!empty($_POST)) {
 			foreach ($this->fields as $key => $value) {
 				// $value is not used
-				
+
 				if(isset($_POST[$key]))
 				{
 					$this->$key = $_POST[$key];
@@ -277,7 +283,7 @@ class Model {
 	public function __set($key, $value)
 	{
 		$ft = $this->getField($key, $value, $this->fields[$key]);
-	
+
 		if($this->isNew())
 		{
 			$tempModel = $this->baseModel->create(array());
@@ -308,7 +314,7 @@ class Model {
 		{
 			$output .= '<div class="field">'. $this->$field . '</div>';
 		}
-		
+
 		return $output;
 		//return $this->baseModelInstance->toJson();
 	}
