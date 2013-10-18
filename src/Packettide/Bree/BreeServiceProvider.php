@@ -35,12 +35,14 @@ class BreeServiceProvider extends ServiceProvider {
 
 		// Attach first party fields
 		FieldSetProvider::attachFields('basic', array(
+			'Date' => 'Packettide\Bree\FieldTypes\Date',
+			'File' => 'Packettide\Bree\FieldTypes\File',
+			'InlineStacked' => 'Packettide\Bree\FieldTypes\InlineStacked',
+			'Matrix' => 'Packettide\Bree\FieldTypes\None',
 			'Text' => 'Packettide\Bree\FieldTypes\Text',
 			'TextArea' => 'Packettide\Bree\FieldTypes\TextArea',
-			'Wysiwyg' => 'Packettide\Bree\FieldTypes\TextArea',
-			'Matrix' => 'Packettide\Bree\FieldTypes\None',
-			'InlineStacked' => 'Packettide\Bree\FieldTypes\InlineStacked',
-			'File' => 'Packettide\Bree\FieldTypes\File'
+			'Time' => 'Packettide\Bree\FieldTypes\Time',
+			'Wysiwyg' => 'Packettide\Bree\FieldTypes\TextArea'
 		));
 
 		$this->app['bree'] = $this->app->share(function($app)
