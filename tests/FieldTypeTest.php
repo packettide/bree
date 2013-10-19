@@ -14,7 +14,7 @@ class FieldTypeTest extends PHPUnit_Framework_TestCase {
 
 	public function testLabel()
 	{
-		$this->assertEquals('<label for="fieldtest"  >Field Test</label>', $this->fieldType->label());
+		$this->assertEquals('<label for="fieldtest">Field Test</label>', $this->fieldType->label());
 	}
 
 }

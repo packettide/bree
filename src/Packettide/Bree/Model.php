@@ -99,14 +99,18 @@ class Model {
 	{
 		$fieldType = FieldSetProvider::getFieldType($fieldtype);
 
-		// register $fieldtype with model and favor fieldtype implementations
-		// with popular fieldsets in the model
 		$fieldClass = $this->registerFieldType($fieldType);
 
 		return $fieldClass;
 	}
 
-
+	/**
+	 * Register $fieldtype with model and favor fieldtype implementations
+	 * with popular fieldsets in the model
+	 *
+	 * @param  [type] $fieldType [description]
+	 * @return [type]            [description]
+	 */
 	protected function registerFieldType($fieldType)
 	{
 		if(!is_array($fieldType)) return false;

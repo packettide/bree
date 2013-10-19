@@ -8,9 +8,9 @@ class InlineTabular extends FieldTypeRelation {
 	/**
 	 *
 	 */
-	public function field($extra = array())
+	public function field($attributes = array())
 	{
-		$attrs = $this->getFieldAttributes($extra);
+		$attrs = $this->getFieldAttributes($attributes);
 
 		$options = '';
 		if($this->data instanceof Collection)

@@ -7,10 +7,8 @@ Bree provides an interface to associate fieldtypes with existing Eloquent model 
 Install with composer by adding this line to your 'require' block:
 
     "packettide/bree": "@dev"
-    
-In Laravel4 add `'Packettide\Bree\BreeServiceProvider',` to the providers array in app/config/app.php
 
-Alternatively you can add a use statement to the file where Bree will be used: `use Packettide\Bree\Model as Bree;`
+In Laravel4 add `'Packettide\Bree\BreeServiceProvider',` to the providers array in app/config/app.php
 
 ##Usage
 
@@ -21,7 +19,7 @@ Alternatively you can add a use statement to the file where Bree will be used: `
 			'cover'  => array('type' => 'File', 'directory' => ''.public_path().'/covers/'),
 			'comments' => array('type' => 'InlineStacked', 'related' => 'Comment', 'title' => 'title')
 		));
-		
+
 	$book->find(1);
 	echo $book; //this will output fields for all defined attributes
 
@@ -40,15 +38,15 @@ In app/models/Book.php
 And then the route/controller would be simplified
 
 	$book = new Bree('Book');
-		
+
 	$book->find(1);
 	echo $book; //this will output fields for all defined attributes
-	
+
 Note that you can define a base field mapping in your model and override it in a route if needed.
 
 ###Bundled FieldTypes
 
-* InlineStacked with relations - HasOne, BelongsTo, HasMany 
+* InlineStacked with relations - HasOne, BelongsTo, HasMany
 * File Upload (Single File Only)
 * TextArea
 * Text

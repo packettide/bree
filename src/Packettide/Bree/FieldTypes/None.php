@@ -7,7 +7,7 @@ use Packettide\Bree\FieldType;
  */
 class None extends FieldType {
 
-	public function field($extra = array())
+	public function field($attributes = array())
 	{
 		return '';
 	}

@@ -4,13 +4,9 @@ use Packettide\Bree\FieldType;
 
 class Time extends FieldType {
 
-	public function field($extra = array())
+	public function field($attributes = array())
 	{
-		$extra = array_merge($extra, $this->extra);
-		$attrs = "";
-		foreach ($extra as $key => $value) {
-			$attrs .= "$key=\"$value\"";
-		}
+		$attrs = $this->getFieldAttributes($attributes);
 		return '<input name="'.$this->name.'" value="'.$this->data.'"  id="'.$this->name.'" '.$attrs.' type="time" />';
 	}
 

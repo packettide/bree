@@ -5,45 +5,69 @@ class FieldType {
 	public $name;
 	public $data;
 	public $options;
-	public $extra;
-	protected $reservedOptions = array('label' => '', 'name' => '', 'type' => '', 'relation' => '', '_bree_field_class' => '');
+	public $attributes;
+
+	protected $reserved = array('label' => '', 'name' => '', 'type' => '', 'relation' => '', '_bree_field_class' => '');
+
 	protected static $assets = array();
 
 	public function __construct($name, $data, $options=array())
 	{
 		$this->name = $name;
 		$this->data = $data;
+
+		// Treat 'class' attribute as an array
+		if(isset($options['class']))
+		{
+			$options['class'] = explode(' ', $options['class']);
+		}
+
 		$this->options = $options;
-		$this->extra = array_diff_key($options, $this->reservedOptions);
+		// var_dump($this->options);
+		$this->attributes = $this->removeReservedAttributes($options);
+		// var_dump($this->attributes);
 	}
 
-	public function field($extra = array()) {}
+	public function field($attributes = array()) {}
 
-	public function label($extra = array()) {
-		$attrs = "";
-		foreach ($extra as $key => $value) {
-			$attrs .= "$key=\"$value\"";
+	public function label($attributes = array()) {
+		$attrs = array();
+		foreach ($attributes as $key => $value) {
+			$attrs[] = $this->makeAttribute($key, $value);
 		}
+		$attrs = (count($attrs)) ? ' '.implode(' ', $attrs).' ' : '';
+
 		if(isset($this->options['label']))
 		{
-			return '<label for="'.$this->name.'" '.$attrs.' >'.$this->options['label'].'</label>';
+			return '<label for="'.$this->name.'"'.$attrs.'>'.$this->options['label'].'</label>';
 		}
 	}
 
 	public function save() {}
 
-	protected function getFieldAttributes($extra = array())
+	protected function removeReservedAttributes($attributes = array())
 	{
-		$extra = array_merge($extra, $this->extra);
+		return array_diff_key($attributes, $this->reserved);
+	}
+
+	protected function getFieldAttributes($attributes = array())
+	{
+		$attributes = array_merge($attributes, $this->attributes);
 
 		// need to remove any reserved attributes here
-		$extra = array_diff_key($extra, $this->reservedOptions);
-		$attrs = "";
+		$attributes = $this->removeReservedAttributes($attributes, $this->reserved);
+		$attrs = array();
 
-		if($extra)
+		if($attributes)
 		{
-			foreach ($extra as $key => $value) {
-				$attrs .= "$key=\"$value\"";
+			foreach ($attributes as $key => $value) {
+				if(is_array($value))
+				{
+					$attrs[] = $this->makeAttribute($key, implode(' ', $value));
+				}
+				else{
+					$attrs[] = $this->makeAttribute($key, $value);
+				}
 			}
 		}
 
@@ -51,9 +75,13 @@ class FieldType {
 		// would be great to have "hidden" attributes as well (ex: "_bree_field_class")
 
 		// pad the attributes string
-		if($attrs) $attrs = ' '.$attrs.' ';
+		return (count($attrs)) ? ' '.implode(' ', $attrs).' ' : '';
+	}
 
-		return $attrs;
+	private function makeAttribute($key, $value)
+	{
+		if (!is_null($value))
+			return $key.'="'.e($value).'"';
 	}
 
 	public static function assets() {
