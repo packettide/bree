@@ -1,6 +1,13 @@
 {
     "name": "packettide/bree",
     "description": "",
+    "keywords": [
+        "laravel",
+        "eloquent",
+        "orm",
+        "form",
+        "fieldtypes"
+    ],
     "authors": [
         {
             "name": "Packet Tide",
