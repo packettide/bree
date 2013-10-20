@@ -49,7 +49,7 @@ class Model {
 
 		foreach($fields as &$field)
 		{
-			$field['_bree_field_class'] = $this->resolveFieldClass($field['type']);
+			$field['_bree_field_class'] = $this->resolveFieldClass($field);
 			// var_dump($field);
 			// echo $this->resolveFieldClass($field['type']);
 		}
@@ -82,7 +82,7 @@ class Model {
 			}
 			else
 			{
-				$fieldType = $this->resolveFieldClass($field['type']);
+				$fieldType = $this->resolveFieldClass($field);
 			}
 
 			$data = new $fieldType($key, $data, $field);
@@ -95,9 +95,25 @@ class Model {
 		return $data;
 	}
 
-	public function resolveFieldClass($fieldtype)
+	public function resolveFieldClass($field)
 	{
-		$fieldType = FieldSetProvider::getFieldType($fieldtype);
+		$fieldType = FieldSetProvider::getFieldType($field['type']);
+
+		// If a particular fieldset is desired we will look for it in
+		// the list of available sets and remove all others if it exits
+		if(isset($field['fieldset']))
+		{
+			$fieldSet = $field['fieldset'];
+
+			if(array_key_exists($fieldSet, $fieldType))
+			{
+				$fieldType = array($fieldSet => $fieldType[$fieldSet]);
+			}
+			else
+			{
+				throw new Exception('Fieldset "'.$fieldSet.'" not available');
+			}
+		}
 
 		$fieldClass = $this->registerFieldType($fieldType);
 

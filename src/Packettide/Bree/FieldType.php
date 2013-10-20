@@ -7,7 +7,7 @@ class FieldType {
 	public $options;
 	public $attributes;
 
-	protected $reserved = array('label', 'name', 'type', '_bree_field_class');
+	protected $reserved = array('label', 'name', 'type', 'fieldset', '_bree_field_class');
 	protected static $assets = array();
 
 	public function __construct($name, $data, $options=array())
