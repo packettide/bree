@@ -4,14 +4,12 @@ use Illuminate\Database\Eloquent\Relations;
 
 class FieldTypeRelation extends FieldType {
 
-	protected $reserved = array('label' => '', 'name' => '', 'type' => '', 'related' => '', 'title' => '', 'relation' => '', '_bree_field_class' => '');
-
 	public function __construct($name, $data, $options=array())
 	{
+		// Add a few more reserved attributes for relation fieldtypes
+		array_push($this->reserved, 'relation', 'related', 'title');
 
-		/**
-		 * Make sure the related model is initialized
-		 */
+		// Make sure the related model is initialized
 		if(isset($options['related']) && !($options['related'] instanceof Model))
 		{
 			$options['related'] = new Model($options['related']);

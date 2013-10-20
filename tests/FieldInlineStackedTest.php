@@ -190,8 +190,6 @@ class FieldInlineStackedTest extends PHPUnit_Framework_TestCase {
 
 }
 
-//should really stub the BreeModel right? Eloquent has already been tested...
-
 class EloquentModelStub extends EloquentModel {
 	protected $table = 'stub';
 	protected $guarded = array();

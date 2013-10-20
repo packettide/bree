@@ -7,8 +7,7 @@ class FieldType {
 	public $options;
 	public $attributes;
 
-	protected $reserved = array('label' => '', 'name' => '', 'type' => '', 'relation' => '', '_bree_field_class' => '');
-
+	protected $reserved = array('label', 'name', 'type', '_bree_field_class');
 	protected static $assets = array();
 
 	public function __construct($name, $data, $options=array())
@@ -23,13 +22,18 @@ class FieldType {
 		}
 
 		$this->options = $options;
-		// var_dump($this->options);
 		$this->attributes = $this->removeReservedAttributes($options);
-		// var_dump($this->attributes);
 	}
 
 	public function field($attributes = array()) {}
 
+	public function save() {}
+
+	/**
+	 * Generate an HTML label for the field
+	 * @param  array  $attributes additional attributes for the label
+	 * @return string
+	 */
 	public function label($attributes = array()) {
 		$attrs = array();
 		foreach ($attributes as $key => $value) {
@@ -43,13 +47,21 @@ class FieldType {
 		}
 	}
 
-	public function save() {}
-
+	/**
+	 * Filter out reserved attributes from an array of attributes
+	 * @param  array  $attributes
+	 * @return array
+	 */
 	protected function removeReservedAttributes($attributes = array())
 	{
-		return array_diff_key($attributes, $this->reserved);
+		return array_diff_key($attributes, array_flip($this->reserved));
 	}
 
+	/**
+	 * Create a proper string of attributes
+	 * @param  array  $attributes
+	 * @return string
+	 */
 	protected function getFieldAttributes($attributes = array())
 	{
 		$attributes = array_merge($attributes, $this->attributes);
@@ -61,25 +73,25 @@ class FieldType {
 		if($attributes)
 		{
 			foreach ($attributes as $key => $value) {
-				if(is_array($value))
-				{
-					$attrs[] = $this->makeAttribute($key, implode(' ', $value));
-				}
-				else{
-					$attrs[] = $this->makeAttribute($key, $value);
-				}
+				$attrs[] = $this->makeAttribute($key, $value);
 			}
 		}
-
-		// we might as well export reserved attributes here
-		// would be great to have "hidden" attributes as well (ex: "_bree_field_class")
 
 		// pad the attributes string
 		return (count($attrs)) ? ' '.implode(' ', $attrs).' ' : '';
 	}
 
+	/**
+	 * Turn key-value pair into an HTML attribute
+	 * @param  string 		$key
+	 * @param  string|array $value
+	 * @return string
+	 */
 	private function makeAttribute($key, $value)
 	{
+		if(is_array($value))
+			$value = implode(' ', $value);
+
 		if (!is_null($value))
 			return $key.'="'.e($value).'"';
 	}
