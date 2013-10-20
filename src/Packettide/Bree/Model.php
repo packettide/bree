@@ -36,7 +36,7 @@ class Model {
 		}
 		else
 		{
-			//abort error
+			throw new \Exception('Invalid Eloquent Model');
 		}
 	}
 
@@ -111,7 +111,7 @@ class Model {
 			}
 			else
 			{
-				throw new Exception('Fieldset "'.$fieldSet.'" not available');
+				throw new \Exception('Fieldset "'.$fieldSet.'" not available');
 			}
 		}
 

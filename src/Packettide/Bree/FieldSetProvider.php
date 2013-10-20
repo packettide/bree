@@ -16,15 +16,15 @@ class FieldSetProvider {
 		{
 			$fieldset = new $fieldset;
 		}
-		
+
 		self::addFieldSet($fieldset);
-		
+
 	}
 
 	/**
 	 * Attach an array of FieldTypes to an already defined FieldSet
-	 * @param  string $fieldset 
-	 * @param  array  $fields   
+	 * @param  string $fieldset
+	 * @param  array  $fields
 	 * @return [type]           [description]
 	 */
 	public static function attachFields($fieldset, $fields = array())
@@ -35,8 +35,7 @@ class FieldSetProvider {
 		}
 		else
 		{
-			// Error - FieldSet not found
-			echo 'fieldset not found';
+			throw new \Exception('Fieldset "'.$fieldset.'" not found');
 		}
 	}
 
@@ -53,7 +52,7 @@ class FieldSetProvider {
 	{
 		if(array_key_exists($fieldSetName, self::$fieldsets))
 		{
-			return self::$fieldsets[$fieldSetName];	
+			return self::$fieldsets[$fieldSetName];
 		}
 	}
 
@@ -68,7 +67,7 @@ class FieldSetProvider {
 		foreach(self::$fieldsets as $fieldset)
 		{
 			$fieldtype = $fieldset->retrieveFieldType($name);
-			
+
 			if($fieldtype)
 			{
 				$fieldtypes[$fieldset->getName()] = $fieldtype;
@@ -81,7 +80,7 @@ class FieldSetProvider {
 
 	private static function addFieldSet($fieldset)
 	{
-		if( !($fieldset instanceof FieldSet) ) echo 'error - fieldset not recognized';
+		if( !($fieldset instanceof FieldSet) ) throw new \Exception('Invalid Fieldset');
 
 		if(!array_key_exists($fieldset->getName(), self::$fieldsets))
 		{
@@ -89,8 +88,8 @@ class FieldSetProvider {
 		}
 		else
 		{
-			echo 'error - fieldset already registered';
+			throw new \Exception('Fieldset "'.$fieldset.'" already registered');
 		}
-	}	
+	}
 
 }
