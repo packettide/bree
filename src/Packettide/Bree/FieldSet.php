@@ -72,7 +72,7 @@ abstract class FieldSet {
 		{
 			foreach($assets as $asset)
 			{
-				$paths[$assetType][] = $this->generateAssetLink($assetType, $asset );
+				$paths[$assetType][] = $this->generateAssetLink($assetType, $asset);
 			}
 		}
 
