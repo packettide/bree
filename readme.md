@@ -53,12 +53,21 @@ Here is an example of what a field definition looks like
 * **Type**: This is the name of the field type
 
 
-###Core FieldTypes
+### Core Field Types
 
-* InlineStacked with relations - HasOne, BelongsTo, HasMany
+The following field types are loaded by default:
+
+* Date
 * File Upload (Single File Only)
-* TextArea
+* InlineStacked (Currently supports these relation types - HasOne, BelongsTo, HasMany)
 * Text
+* TextArea
+* Time
+
+### Create your own Field Package
+
+[Read more about extending Bree](extend.md).
+
 
 ### License
 
