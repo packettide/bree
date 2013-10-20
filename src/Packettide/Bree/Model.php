@@ -205,10 +205,27 @@ class Model {
 		return $output;
 	}
 
+	/**
+	 * Generate model fields output
+	 * @return string
+	 */
+	public function fields()
+	{
+		$output = '';
+
+		foreach($this->fields as $field => $type)
+		{
+			$output .= '<div class="field">'. $this->$field . '</div>';
+		}
+
+		return $output;
+	}
+
 	/*
 	 * Save any post changes and echo out the form
 	 */
-	public function saveAndDisplay() {
+	public function saveAndDisplay()
+	{
 		if (!empty($_POST)) {
 			foreach ($this->fields as $key => $value) {
 				// $value is not used
@@ -310,17 +327,7 @@ class Model {
 	 */
 	public function __toString()
 	{
-		$output = '';
-
-		$output .= $this->assets();
-
-		foreach($this->fields as $field => $type)
-		{
-			$output .= '<div class="field">'. $this->$field . '</div>';
-		}
-
-		return $output;
-		//return $this->baseModelInstance->toJson();
+		return $this->assets() . $this->fields();
 	}
 
 }
