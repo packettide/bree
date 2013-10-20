@@ -16,7 +16,7 @@ abstract class FieldSet {
 	public function retrieveFieldType($name)
 	{
 		$fieldtype = '';
-		
+
 		if(array_key_exists($name, $this->fieldtypes))
 		{
 			$fieldtype = $this->fieldtypes[$name];
@@ -96,14 +96,15 @@ abstract class FieldSet {
 				}
 			}
 		}
-		
+
 		return $paths;
 	}
 
 	public function generateAssetLink($type, $filename)
 	{
 		$link = '';
-		$filename = asset($filename);
+
+		$filename = asset('packages/' . $filename);
 
 		switch ($type) {
 			case 'css':
