@@ -44,9 +44,13 @@ And then the route/controller would be simplified
 
 Note that you can define a base field mapping in your model and override it in a route if needed.
 
-###Bundled FieldTypes
+###Core FieldTypes
 
 * InlineStacked with relations - HasOne, BelongsTo, HasMany
 * File Upload (Single File Only)
 * TextArea
 * Text
+
+### License
+
+Bree is open-sourced software licensed under the [MIT license](http://opensource.org/licenses/MIT)
