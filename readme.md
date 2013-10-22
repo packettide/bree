@@ -2,6 +2,8 @@
 
 Bree provides an interface to associate fieldtypes with existing Eloquent model attributes.
 
+*This project is still in a very early stage and breaking changes may  be made.*
+
 ##Installation
 
 Install with composer by adding this line to your 'require' block:
