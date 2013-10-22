@@ -31,4 +31,4 @@ Each field package must have a service provider which extends `Illuminate\Suppor
 
 ### An Example
 
-Please refer to the Colorpicker field type as an example of how to create and register your custom field type.
+Please refer to the [Colorpicker field package](https://github.com/packettide/bree-colorpicker) as an example of how to create and register your own field type.
