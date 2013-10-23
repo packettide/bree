@@ -1,6 +1,6 @@
 {
     "name": "packettide/bree",
-    "description": "",
+    "description": "A form layer for Eloquent which supports a variety of field packages",
     "keywords": [
         "laravel",
         "eloquent",
