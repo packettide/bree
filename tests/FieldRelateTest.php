@@ -7,7 +7,7 @@ use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Database\Eloquent\Relations;
 use Illuminate\Database\Eloquent\Model as EloquentModel;
 
-class FieldInlineStackedTest extends PHPUnit_Framework_TestCase {
+class FieldRelateTest extends PHPUnit_Framework_TestCase {
 
 	/**
 	 * Setup the test environment.
@@ -60,7 +60,7 @@ class FieldInlineStackedTest extends PHPUnit_Framework_TestCase {
 			'relation' => $relation
 		);
 
-		$books = new FieldTypes\InlineStacked('books', $chosen, $options);
+		$books = new FieldTypes\Relate('books', $chosen, $options);
 
 		$this->assertEquals('<select multiple name="books[]" id="books"><option selected value="1">The Horse and His Boy</option><option selected value="2">The Silver Chair</option></select>', $books->field());
 	}
@@ -83,7 +83,7 @@ class FieldInlineStackedTest extends PHPUnit_Framework_TestCase {
 			'relation' => $relation
 		);
 
-		$author = new FieldTypes\InlineStacked('author', 1, $options);
+		$author = new FieldTypes\Relate('author', 1, $options);
 
 		$this->assertEquals('<select name="author" id="author"><option selected value="1">C.S. Lewis</option><option value="2">JRR Tolkien</option></select>', $author->field());
 	}
@@ -103,7 +103,7 @@ class FieldInlineStackedTest extends PHPUnit_Framework_TestCase {
 			'relation' => $relation
 		);
 
-		$author = new FieldTypes\InlineStacked('author', '', $options);
+		$author = new FieldTypes\Relate('author', '', $options);
 
 		// No options passed
 		$this->assertEquals('<select name="author" id="author"></select>', $author->field());
@@ -132,7 +132,7 @@ class FieldInlineStackedTest extends PHPUnit_Framework_TestCase {
 			'relation' => $relation
 		);
 
-		$author = new FieldTypes\InlineStacked('author', $this->author1, $options);
+		$author = new FieldTypes\Relate('author', $this->author1, $options);
 
 		$author->save();
 
@@ -154,7 +154,7 @@ class FieldInlineStackedTest extends PHPUnit_Framework_TestCase {
 			'relation' => $relation
 		);
 
-		$author = new FieldTypes\InlineStacked('author', $this->author2, $options);
+		$author = new FieldTypes\Relate('author', $this->author2, $options);
 
 		$author->save();
 	}
@@ -176,7 +176,7 @@ class FieldInlineStackedTest extends PHPUnit_Framework_TestCase {
 			'relation' => $relation
 		);
 
-		$author = new FieldTypes\InlineStacked('author', $chosen, $options);
+		$author = new FieldTypes\Relate('author', $chosen, $options);
 
 		$author->save();
 	}

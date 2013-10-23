@@ -37,7 +37,8 @@ class BreeServiceProvider extends ServiceProvider {
 		FieldSetProvider::attachFields('basic', array(
 			'Date' => 'Packettide\Bree\FieldTypes\Date',
 			'File' => 'Packettide\Bree\FieldTypes\File',
-			'InlineStacked' => 'Packettide\Bree\FieldTypes\InlineStacked',
+			'InlineStacked' => 'Packettide\Bree\FieldTypes\Relate', // keep this alias around for a bit
+			'Relate' => 'Packettide\Bree\FieldTypes\Relate',
 			'Matrix' => 'Packettide\Bree\FieldTypes\None',
 			'Text' => 'Packettide\Bree\FieldTypes\Text',
 			'TextArea' => 'Packettide\Bree\FieldTypes\TextArea',

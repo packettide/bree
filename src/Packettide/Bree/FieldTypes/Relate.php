@@ -4,7 +4,7 @@ use Packettide\Bree\FieldTypeRelation;
 use Illuminate\Database\Eloquent\Collection as Collection;
 use Illuminate\Database\Eloquent\Relations;
 
-class InlineStacked extends FieldTypeRelation {
+class Relate extends FieldTypeRelation {
 
 	/**
 	 *

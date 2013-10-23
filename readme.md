@@ -20,9 +20,9 @@ Then publish the package's assets:
 
     $book = new Bree('Book', array(
 			'title'  => array('type' => 'Text'),
-			'author' => array('type' => 'InlineStacked', 'related' => 'Author', 'title' => 'name'),
+			'author' => array('type' => 'Relate', 'related' => 'Author', 'title' => 'name'),
 			'cover'  => array('type' => 'File', 'directory' => ''.public_path().'/covers/', 'fieldset' => 'advanced'),
-			'comments' => array('type' => 'InlineStacked', 'related' => 'Comment', 'title' => 'title')
+			'comments' => array('type' => 'Relate', 'related' => 'Comment', 'title' => 'title')
 		));
 
 	$book->find(1);
@@ -53,7 +53,7 @@ Note that you can define a base field mapping in your model and override it in a
 
 Here is an example of what a field definition looks like
 
-	array('comments' => array('type' => 'InlineStacked', 'label' => 'Book Comments', 'related' => 'Comment', 'title' => 'title'))
+	array('comments' => array('type' => 'Relate', 'label' => 'Book Comments', 'related' => 'Comment', 'title' => 'title'))
 
 * The key of this array (comments) is the name of the Eloquent attribute or relation that this field should be associated with.
 * **Type**: This is the name of the field type
@@ -65,7 +65,7 @@ The following field types are loaded by default:
 
 * Date
 * File Upload (Single File Only)
-* InlineStacked (Currently supports these relation types - HasOne, BelongsTo, HasMany)
+* Relate (Currently supports these relation types - HasOne, BelongsTo, HasMany)
 * Text
 * TextArea
 * Time
