@@ -14,7 +14,7 @@ In Laravel4 add `'Packettide\Bree\BreeServiceProvider',` to the $providers array
 
 Then publish the package's assets:
 
-	php artisan asset:publish packettide/bree-colorpicker
+	php artisan asset:publish packettide/bree
 
 ##Usage Overview
 
