@@ -41,8 +41,7 @@ class BreeServiceProvider extends ServiceProvider {
 			'Matrix' => 'Packettide\Bree\FieldTypes\None',
 			'Text' => 'Packettide\Bree\FieldTypes\Text',
 			'TextArea' => 'Packettide\Bree\FieldTypes\TextArea',
-			'Time' => 'Packettide\Bree\FieldTypes\Time',
-			'Wysiwyg' => 'Packettide\Bree\FieldTypes\TextArea'
+			'Time' => 'Packettide\Bree\FieldTypes\Time'
 		));
 
 		$this->app['bree'] = $this->app->share(function($app)
