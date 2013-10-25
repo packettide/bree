@@ -9,12 +9,14 @@ Bree provides an interface to associate fieldtypes with existing Eloquent model 
 Install with composer by adding this line to your 'require' block in composer.json:
 
     "packettide/bree": "@dev"
+    
+And then run `composer update`
 
 In Laravel4 add `'Packettide\Bree\BreeServiceProvider',` to the $providers array in app/config/app.php
 
 Then publish the package's assets:
 
-	php artisan asset:publish packettide/bree
+	php artisan bree:assets
 
 ##Usage Overview
 

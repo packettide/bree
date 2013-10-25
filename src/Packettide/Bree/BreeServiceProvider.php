@@ -19,6 +19,13 @@ class BreeServiceProvider extends ServiceProvider {
 	public function boot()
 	{
 		$this->package('packettide/bree');
+
+		$this->app['command.bree.assets'] = $this->app->share(function($app)
+		{
+			return new Commands\AssetsCommand;
+		});
+
+		$this->commands('command.bree.assets');
 	}
 
 	/**
@@ -29,9 +36,11 @@ class BreeServiceProvider extends ServiceProvider {
 	public function register()
 	{
 
-		// Register the Basic + Advanced FieldSets
+		// Register the Basic FieldSet
 		FieldSetProvider::register('Packettide\Bree\FieldSets\BasicFieldSet');
-		FieldSetProvider::register('Packettide\Bree\FieldSets\AdvancedFieldSet');
+
+		// Register the Advanced FieldSet
+		FieldSetProvider::register('Packettide\BreeFsAdvanced\AdvancedFieldSet');
 
 		// Attach first party fields
 		FieldSetProvider::attachFields('basic', array(
@@ -55,6 +64,8 @@ class BreeServiceProvider extends ServiceProvider {
 			$loader = \Illuminate\Foundation\AliasLoader::getInstance();
 			$loader->alias('Bree', 'Packettide\Bree\Model');
 		});
+
+
 	}
 
 	/**
