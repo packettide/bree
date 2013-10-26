@@ -7,12 +7,21 @@ abstract class FieldSet {
 	protected $assetsPublished = array();
 	public $name;
 
-
+	/**
+	 * Add one or more FieldTypes to the FieldSet
+	 * @param  array  $fieldtypes [description]
+	 * @return
+	 */
 	public function attach($fieldtypes = array())
 	{
 		$this->fieldtypes = array_merge($this->fieldtypes, $fieldtypes);
 	}
 
+	/**
+	 * Retrieve the requested FieldType if present
+	 * @param  string $name
+	 * @return string|Packettide/Bree/FieldType
+	 */
 	public function retrieveFieldType($name)
 	{
 		$fieldtype = '';
@@ -25,6 +34,11 @@ abstract class FieldSet {
 		return $fieldtype;
 	}
 
+	/**
+	 * Sort the FieldSets assets into buckets based on extension
+	 * @param  array $assets
+	 * @return array
+	 */
 	public function sortAssets($assets)
 	{
 		$sorted = array();
@@ -44,10 +58,15 @@ abstract class FieldSet {
 		return $sorted;
 	}
 
+	/**
+	 * Retrieve the assets for a fieldset
+	 * @return array
+	 */
 	public function assets()
 	{
 		$assets = array();
 
+		// Make sure the assets are only published once
 		if(!isset($this->assetsPublished[$this->getName()]))
 		{
 			$this->assetsPublished[$this->getName()] = true;
@@ -57,12 +76,20 @@ abstract class FieldSet {
 		return $assets;
 	}
 
+	/**
+	 * Merge assets for the FieldSet with all dependent FieldTypes
+	 * @return array
+	 */
 	public function publishAssets()
 	{
 		$allAssets = array_merge_recursive($this->fieldSetAssets(), $this->fieldTypeAssets());
 		return $allAssets;
 	}
 
+	/**
+	 * Generate an array of assets for the FieldSet
+	 * @return array
+	 */
 	public function fieldSetAssets()
 	{
 		$paths = array();
@@ -79,6 +106,10 @@ abstract class FieldSet {
 		return $paths;
 	}
 
+	/**
+	 * Generate an array of assets for all dependent FieldTypes
+	 * @return array
+	 */
 	public function fieldTypeAssets()
 	{
 		$paths = array();
@@ -100,6 +131,12 @@ abstract class FieldSet {
 		return $paths;
 	}
 
+	/**
+	 * Helper to generate relevant HTML includes for assets
+	 * @param  string $type     type of asset
+	 * @param  string $filename asset's filename
+	 * @return string           HTML include
+	 */
 	public function generateAssetLink($type, $filename)
 	{
 		$link = '';
@@ -118,6 +155,10 @@ abstract class FieldSet {
 		return $link;
 	}
 
+	/**
+	 * Retrieve the FieldSet's name
+	 * @return string
+	 */
 	public function getName() {
 		return $this->name;
 	}

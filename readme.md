@@ -6,19 +6,17 @@ Bree provides an interface to associate fieldtypes with existing Eloquent model 
 
 ##Installation
 
-Install with composer by adding this line to your 'require' block in composer.json:
+1. Install with composer by adding this line to your 'require' block in composer.json:
 
     "packettide/bree": "@dev"
-    
-And then run `composer update`
+2. Run `composer update`
 
-In Laravel4 add `'Packettide\Bree\BreeServiceProvider',` to the $providers array in app/config/app.php
-
-Then publish the package's assets:
-
-	php artisan bree:assets
+3. In Laravel4 add `'Packettide\Bree\BreeServiceProvider',` to the $providers array in app/config/app.php
+4. Then publish the package's assets - `php artisan bree:assets`
 
 ##Usage Overview
+
+Bree functions by wrapping an existing Eloquent model and attaching field definitions to model attributes.
 
     $book = new Bree('Book', array(
 			'title'  => array('type' => 'Text'),

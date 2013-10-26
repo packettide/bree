@@ -18,7 +18,6 @@ class FieldSetProvider {
 		}
 
 		self::addFieldSet($fieldset);
-
 	}
 
 	/**
@@ -40,14 +39,19 @@ class FieldSetProvider {
 	}
 
 	/**
-	 * [loaded description]
-	 * @return [type] [description]
+	 * Return a list of loaded FieldSets
+	 * @return array
 	 */
 	public static function loaded()
 	{
 		return self::$fieldsets;
 	}
 
+	/**
+	 * Retrieve a FieldSet by name
+	 * @param  string $fieldSetName
+	 * @return Packettide\Bree\FieldSet
+	 */
 	public static function get($fieldSetName)
 	{
 		if(array_key_exists($fieldSetName, self::$fieldsets))
@@ -56,7 +60,11 @@ class FieldSetProvider {
 		}
 	}
 
-
+	/**
+	 * Find all implementations of a FieldType across FieldSets
+	 * @param  string $name
+	 * @return array
+	 */
 	public static function getFieldType($name)
 	{
 		$fieldtypes = array();
@@ -77,7 +85,10 @@ class FieldSetProvider {
 		return $fieldtypes;
 	}
 
-
+	/**
+	 * Check for FieldSet validity and add to list if not present
+	 * @param Packettide\Bree\FieldSet $fieldset
+	 */
 	private static function addFieldSet($fieldset)
 	{
 		if( !($fieldset instanceof FieldSet) ) throw new \Exception('Invalid Fieldset');
