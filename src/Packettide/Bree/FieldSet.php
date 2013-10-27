@@ -7,14 +7,22 @@ abstract class FieldSet {
 	protected $assetsPublished = array();
 	public $name;
 
+
 	/**
-	 * Add one or more FieldTypes to the FieldSet
-	 * @param  array  $fieldtypes [description]
-	 * @return
+	 * Retrieve the FieldSet's name
+	 * @return string
 	 */
-	public function attach($fieldtypes = array())
+	public function getName() {
+		return $this->name;
+	}
+
+	/**
+	 * Get a list of all associated FieldTypes
+	 * @return [type] [description]
+	 */
+	public function allFieldTypes()
 	{
-		$this->fieldtypes = array_merge($this->fieldtypes, $fieldtypes);
+		return $this->fieldtypes;
 	}
 
 	/**
@@ -32,6 +40,16 @@ abstract class FieldSet {
 		}
 
 		return $fieldtype;
+	}
+
+	/**
+	 * Add one or more FieldTypes to the FieldSet
+	 * @param  array  $fieldtypes [description]
+	 * @return
+	 */
+	public function attach($fieldtypes = array())
+	{
+		$this->fieldtypes = array_merge($this->fieldtypes, $fieldtypes);
 	}
 
 	/**
@@ -56,6 +74,15 @@ abstract class FieldSet {
 		}
 
 		return $sorted;
+	}
+
+	/**
+	 * Return FieldSet's assets
+	 * @return array
+	 */
+	public function getAssets()
+	{
+		return $this->assets;
 	}
 
 	/**
@@ -154,14 +181,5 @@ abstract class FieldSet {
 
 		return $link;
 	}
-
-	/**
-	 * Retrieve the FieldSet's name
-	 * @return string
-	 */
-	public function getName() {
-		return $this->name;
-	}
-
 
 }

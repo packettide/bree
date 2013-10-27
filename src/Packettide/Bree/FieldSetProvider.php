@@ -42,7 +42,7 @@ class FieldSetProvider {
 	 * Return a list of loaded FieldSets
 	 * @return array
 	 */
-	public static function loaded()
+	public static function all()
 	{
 		return self::$fieldsets;
 	}

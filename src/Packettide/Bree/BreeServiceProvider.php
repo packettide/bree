@@ -20,12 +20,12 @@ class BreeServiceProvider extends ServiceProvider {
 	{
 		$this->package('packettide/bree');
 
-		$this->app['command.bree.assets'] = $this->app->share(function($app)
+		$this->app['bree.command.assets'] = $this->app->share(function($app)
 		{
 			return new Commands\AssetsCommand;
 		});
 
-		$this->commands('command.bree.assets');
+		$this->commands('bree.command.assets');
 	}
 
 	/**
