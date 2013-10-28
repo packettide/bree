@@ -14,6 +14,23 @@ Bree provides an interface to associate fieldtypes with existing Eloquent model 
 3. In Laravel4 add `'Packettide\Bree\BreeServiceProvider',` to the $providers array in app/config/app.php
 4. Then publish the package's assets - `php artisan bree:assets`
 
+(Optional) You may also want to add the bree:assets command to your post-update and post-install hooks in composer. This would look something like
+
+	"scripts": {
+		"pre-update-cmd": [
+			"php artisan clear-compiled"
+		],
+		"post-install-cmd": [
+			"php artisan optimize",
+			"php artisan bree:assets"
+		],
+		"post-update-cmd": [
+			"php artisan optimize",
+			"php artisan bree:assets"
+		]
+	},
+
+
 ##Usage Overview
 
 Bree functions by wrapping an existing Eloquent model and attaching field definitions to model attributes.
