@@ -4,12 +4,9 @@ use Packettide\Bree\FieldType;
 
 class File extends FieldType {
 
-	public function field($attributes = array())
+	public function generateField($name, $data, $attributes = array())
 	{
-		$attrs = $this->getFieldAttributes($attributes);
-
-		// return Form::text($name, $data);
-		return '<input type="file" name="'.$this->name.'" id="'.$this->name.'"'.$attrs.'/>';
+		return '<input type="file" name="'.$name.'" id="'.$name.'"'.$attributes.'/>';
 	}
 
 	/**

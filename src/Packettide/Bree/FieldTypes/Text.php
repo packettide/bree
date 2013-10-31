@@ -4,10 +4,9 @@ use Packettide\Bree\FieldType;
 
 class Text extends FieldType {
 
-	public function field($attributes = array())
+	public function generateField($name, $data, $attributes = array())
 	{
-		$attrs = $this->getFieldAttributes($attributes);
-		return '<input name="'.$this->name.'" value="'.$this->data.'"  id="'.$this->name.'"'.$attrs.'/>';
+		return '<input name="'.$name.'" value="'.$data.'"  id="'.$name.'"'.$attributes.'/>';
 	}
 
 

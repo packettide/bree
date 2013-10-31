@@ -48,7 +48,7 @@ class BreeServiceProvider extends ServiceProvider {
 			'File' => 'Packettide\Bree\FieldTypes\File',
 			'InlineStacked' => 'Packettide\Bree\FieldTypes\Relate', // keep this alias around for a bit
 			'Relate' => 'Packettide\Bree\FieldTypes\Relate',
-			'Matrix' => 'Packettide\Bree\FieldTypes\None',
+			'Matrix' => 'Packettide\Bree\FieldTypes\Matrix',
 			'Text' => 'Packettide\Bree\FieldTypes\Text',
 			'TextArea' => 'Packettide\Bree\FieldTypes\TextArea',
 			'Time' => 'Packettide\Bree\FieldTypes\Time'
