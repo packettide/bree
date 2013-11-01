@@ -4,7 +4,9 @@ use Packettide\Bree\FieldTypeRelation;
 use Illuminate\Database\Eloquent\Collection as Collection;
 use Illuminate\Database\Eloquent\Relations;
 
-class Matrix extends FieldTypeRelation {
+class Cell extends FieldTypeRelation {
+
+	private $prefix = "cell_";
 
 	/**
 	 *
@@ -41,7 +43,7 @@ class Matrix extends FieldTypeRelation {
 				\$('body').on('click', '.delete-row-{$this->name}', function () {
 					\$(this).parents('tr').hide();
 					var id = \$(this).parents('tr').find('input[type=hidden]').val();
-					\$(this).parents('form').append('<input type=\"hidden\" name=\"mt_{$this->name}[_mt_delete][]\" value=\"'+id+'\">')
+					\$(this).parents('form').append('<input type=\"hidden\" name=\"{$this->prefix}{$this->name}[_{$this->prefix}delete][]\" value=\"'+id+'\">')
 					if(id === '-1') {
 						\$(this).parents('tr').remove();
 					}
@@ -85,15 +87,15 @@ class Matrix extends FieldTypeRelation {
 		$toReturn = "<tr>";
 		if (is_object($row))
 		{
-			$toReturn .= "<input type='hidden' name=".'mt_'.$this->name.'[id][]'." value='{$row->id}'>";
+			$toReturn .= "<input type='hidden' name=".$this->prefix.$this->name.'[id][]'." value='{$row->id}'>";
 		}
 		else
 		{
-			$toReturn .= "<input type='hidden' name=".'mt_'.$this->name.'[id][]'." value='-1'>";
+			$toReturn .= "<input type='hidden' name=".$this->prefix.$this->name.'[id][]'." value='-1'>";
 		}
 		$admin = new \Packettide\Bree\Model($row);
 		$admin->attachObserver("field.render", function($name, $data, $attrs) {
-			return array('mt_'.$this->name.'['.$name.'][]', $data, $attrs);
+			return array($this->prefix.$this->name.'['.$name.'][]', $data, $attrs);
 		});
 		foreach ($admin->fields as $key => $value) {
 			$toReturn .= '<td>';
@@ -111,13 +113,13 @@ class Matrix extends FieldTypeRelation {
 	{
 		if(empty($this->data)) return;
 
-		$headLen = count(head(array_except($this->data, '_mt_delete')));
+		$headLen = count(head(array_except($this->data, '_'.$this->prefix.'delete')));
 
 		$newData = array();
 
 		for ($i=0; $i < $headLen; $i++) { 
 			$newData[$i] = array(); 
-			foreach (array_except($this->data, '_mt_delete') as $key => $value) {
+			foreach (array_except($this->data, '_'.$this->prefix.'delete') as $key => $value) {
 				if ($key != "id" || $value[$i] != -1) 
 				{
 					$newData[$i][$key] = $value[$i];
@@ -142,9 +144,9 @@ class Matrix extends FieldTypeRelation {
 			$this->relation->save($newMember);
 		}
 
-		$this->data['_mt_delete'] = isset($this->data['_mt_delete'])? $this->data['_mt_delete'] : array();
+		$this->data['_'.$this->prefix.'delete'] = isset($this->data['_'.$this->prefix.'delete'])? $this->data['_'.$this->prefix.'delete'] : array();
 
-		foreach ($this->data['_mt_delete'] as $value) {
+		foreach ($this->data['_'.$this->prefix.'delete'] as $value) {
 			if ($value != -1)
 			{
 				$this->related->baseModel->destroy($value);

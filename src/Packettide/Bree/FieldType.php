@@ -10,6 +10,8 @@ class FieldType {
 	protected $reserved = array('label', 'name', 'type', 'fieldset', '_bree_field_class');
 	protected static $assets = array();
 
+	private $prefix = "";
+
 	public function __construct($name, $data, $options=array())
 	{
 		$this->name = $name;
@@ -136,6 +138,11 @@ class FieldType {
 		{
 			return array($this->name, $this->data, $attrs);
 		}
+	}
+
+	public function getPrefix()
+	{
+		return $this->prefix;
 	}
 
 

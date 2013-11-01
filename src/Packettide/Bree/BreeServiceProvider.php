@@ -55,7 +55,9 @@ class BreeServiceProvider extends ServiceProvider {
 
 		// Attach first party fields
 		FieldSetProvider::attachFields('advanced', array(
-			'Matrix' => 'Packettide\Bree\FieldTypes\Matrix',
+			'Matrix' => 'Packettide\Bree\FieldTypes\Cell',
+			'Cell' => 'Packettide\Bree\FieldTypes\Cell',
+			'Cells' => 'Packettide\Bree\FieldTypes\Cell',
 		));
 
 		$this->app['bree'] = $this->app->share(function($app)

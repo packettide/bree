@@ -322,8 +322,8 @@ class Model {
 	 */
 	public function __set($key, $value)
 	{
-		if(strpos($key, 'mt_') === 0) {
-			$key = substr($key, 3);
+		if(strpos($key, 'cell_') === 0) {
+			$key = substr($key, 5);
 		}
 		$ft = $this->getField($key, $value, $this->fields[$key]);
 
