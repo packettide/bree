@@ -14,7 +14,7 @@ class Matrix extends FieldTypeRelation {
 		$attrs = $this->getFieldAttributes($attributes);
 
 		$available = $this->related->all();
-		// $chosen = $this->data;
+		$chosen = $this->data;
 		$options = '';
 
 
@@ -22,11 +22,31 @@ class Matrix extends FieldTypeRelation {
 		{
 			foreach($available as $row)
 			{
-				$options .= $this->generateRow($row);
+				if($chosen->contains($row->getKey()))
+				{
+					$options .= $this->generateRow($row);
+				}
 			}
 		}
 
-		return "<table $attrs><thead>" . $this->generateHeaders($row) . "</thead><tbody>" . $options . "</tbody></table>";
+		$markup  = "<table $attrs><thead>" . $this->generateHeaders($row) . "</thead><tbody id='".$this->name."-body'>" . $options . "</tbody></table><a id='add-row-".$this->name."'>+ Add Row</a>";
+		$markup = "<script type='x-handlebars-template' id='".$this->name."-row'>" . $this->generateRow(get_class($row)) . "</script>" . $markup;
+		$markup = "<script>
+			\$(function () {
+				var source   = \$('#{$this->name}-row').html();
+				var template = Handlebars.compile(source);
+				\$('#add-row-{$this->name}').click(function () {
+					\$('#{$this->name}-body').append(template());
+				});
+				\$('.delete-row-{$this->name}').click(function () {
+					\$(this).parents('tr').hide();
+					var id = \$(this).parents('tr').find('input[type=hidden]').val();
+					\$(this).parents('form').append('<input type=\"hidden\" name=\"mt_{$this->name}[_mt_delete][]\" value=\"'+id+'\">')
+					return false;
+				});
+			});
+		</script>" . $markup;
+		return $markup;
 
 		// if($this->select === false)
 		// {
@@ -53,21 +73,31 @@ class Matrix extends FieldTypeRelation {
 			$toReturn .= $admin->$key->label();
 			$toReturn .= '</th>';
 		}
+		$toReturn .= '<th>Delete</th>';
 		return $toReturn . '</tr>';
 	}
 
 	public function generateRow($row)
 	{
 		$toReturn = "<tr>";
+		if (is_object($row))
+		{
+			$toReturn .= "<input type='hidden' name=".'mt_'.$this->name.'[id][]'." value='{$row->id}'>";
+		}
+		else
+		{
+			$toReturn .= "<input type='hidden' name=".'mt_'.$this->name.'[id][]'." value='-1'>";
+		}
 		$admin = new \Packettide\Bree\Model($row);
 		$admin->attachObserver("field.render", function($name, $data, $attrs) {
-			return ['mt_'.$this->name.'_'.$name.'[]', $data, $attrs];
+			return array('mt_'.$this->name.'['.$name.'][]', $data, $attrs);
 		});
 		foreach ($admin->fields as $key => $value) {
 			$toReturn .= '<td>';
 			$toReturn .= $admin->$key->field();
 			$toReturn .= '</td>';
 		}
+		$toReturn .= '<td><a href="#" class="delete-row-'.$this->name.'">X</td>';
 		return $toReturn . '</tr>';
 	}
 
@@ -78,34 +108,45 @@ class Matrix extends FieldTypeRelation {
 	{
 		if(empty($this->data)) return;
 
-		if($this->relation instanceof Relations\HasMany && is_array($this->data))
-		{
-			if(is_numeric($this->data[0])) // assume we have an array of ids
-			{
-				foreach($this->data as $key => $item)
+		$headLen = count(head(array_except($this->data, '_mt_delete')));
+
+		$newData = array();
+
+		for ($i=0; $i < $headLen; $i++) { 
+			$newData[$i] = array(); 
+			foreach (array_except($this->data, '_mt_delete') as $key => $value) {
+				if ($key != "id" || $value[$i] != -1) 
 				{
-					$this->data[$key] = $this->related->baseModel->find($item);
+					$newData[$i][$key] = $value[$i];
 				}
 			}
-
-			$this->relation->saveMany($this->data);
 		}
-		else if($this->relation instanceof Relations\BelongsToMany && is_array($this->data))
-		{
-			if(is_numeric($this->data[0])) // assume we have an array of ids
+
+		foreach ($newData as $related) {
+			if (isset($related['id']))
 			{
-				$this->relation->sync($this->data);
+				$this->related->baseModel->find($related['id'])->update(array_except($related, 'id'));
+				$newMember = $this->related->baseModel->find($related['id']);
+			}
+			else
+			{
+				$newMember = $this->related->create($related);
+			}
+			if ($newMember instanceof \Packettide\Bree\Model)
+			{
+				$newMember = $newMember->baseModel;
+			}
+			$this->relation->save($newMember);
+		}
+
+		$this->data['_mt_delete'] = isset($this->data['_mt_delete'])? $this->data['_mt_delete'] : array();
+
+		foreach ($this->data['_mt_delete'] as $value) {
+			if ($value != -1)
+			{
+				$this->related->baseModel->destroy($value);
 			}
 		}
-		else
-		{
-			/* If we have an id let's grab the model instance, otherwise assume we were given it */
-			$this->data = (is_numeric($this->data)) ? $this->related->baseModel->find($this->data) : $this->data;
-
-			parent::saveRelation($this->relation, $this->data);
-
-		}
-
 	}
 
 

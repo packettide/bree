@@ -322,6 +322,9 @@ class Model {
 	 */
 	public function __set($key, $value)
 	{
+		if(strpos($key, 'mt_') === 0) {
+			$key = substr($key, 3);
+		}
 		$ft = $this->getField($key, $value, $this->fields[$key]);
 
 		if($this->isNew())

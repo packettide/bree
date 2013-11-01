@@ -9,10 +9,8 @@ class Relate extends FieldTypeRelation {
 	/**
 	 *
 	 */
-	public function field($attributes = array())
+	public function generateField($name, $data, $attrs)
 	{
-		$attrs = $this->getFieldAttributes($attributes);
-
 		$available = $this->related->all();
 		$chosen = $this->data;
 		$options = '';
@@ -47,11 +45,11 @@ class Relate extends FieldTypeRelation {
 
 		if($this->hasMultiple())
 		{
-			return '<select multiple name="'.$this->name.'[]" id="'.$this->name.'"'.$attrs.'>'. $options .'</select>';
+			return '<select multiple name="'.$name.'[]" id="'.$name.'"'.$attrs.'>'. $options .'</select>';
 		}
 		else
 		{
-			return '<select name="'.$this->name.'" id="'.$this->name.'"'.$attrs.'>'. $options .'</select>';
+			return '<select name="'.$name.'" id="'.$name.'"'.$attrs.'>'. $options .'</select>';
 		}
 
 	}
