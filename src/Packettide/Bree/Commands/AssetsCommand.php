@@ -72,7 +72,17 @@ class AssetsCommand extends Command {
 			}
 			catch(\Exception $e)
 			{
-				echo 'Error for package: '. $package .' - '. $e->getMessage() . "\n";
+				// couldn't publish package assets from vendor
+				// but lets try the workbench too
+				try
+				{
+					$this->call('asset:publish', array('--bench' => $package));
+					$this->line('Assets published from workbench: '.$package);
+				}
+				catch(\Exception $e)
+				{
+					$this->error($package .' - '. $e->getMessage());
+				}
 			}
 		}
 	}

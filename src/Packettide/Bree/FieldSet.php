@@ -7,6 +7,10 @@ abstract class FieldSet {
 	protected $assetsPublished = array();
 	public $name;
 
+	public function __construct()
+	{
+		$this->assets = new AssetCollection();
+	}
 
 	/**
 	 * Retrieve the FieldSet's name

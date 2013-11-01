@@ -1,57 +1,166 @@
 <?php namespace Packettide\Bree;
 
-// Any benefit to extending Illuminate\Support\Collection ?
 class AssetCollection {
 
-	protected $assets = array();
-	public $sorted = false;
+	protected $assetGroups = array();
 
+	public function __construct($assets=array())
+	{
+
+	}
+
+	/**
+	 * Add an asset to the collection after "sorting" it
+	 * @param string $asset
+	 */
 	public function add($asset)
 	{
-		$this->assets[] = $asset;
-		$this->sorted = false;
-	}
+		$asset = $this->sortAsset($asset);
 
-	public function get($ext)
-	{
-
-	}
-
-	public function all()
-	{
-
-	}
-
-	public function sort()
-	{
-		if( ! $this->sorted)
+		if(!array_key_exists(key($asset), $this->assetGroups))
 		{
-			$sorted = array();
+			$this->assetGroups[key($asset)] = array('assets' => array(), 'published' => false);
+		}
 
-			// extract extension and group assets
-			foreach($this->assets as $asset)
+		$this->assetGroups = array_merge_recursive($this->assetGroups, $asset);
+	}
+
+	public function publishAll($ext)
+	{
+		$all = '';
+
+		foreach(array_keys($this->assetGroups) as $key)
+		{
+			$all = array_merge($all, $this->publish($key));
+		}
+
+		return $all;
+	}
+
+	public function publish($ext)
+	{
+		if(array_key_exists($ext, $this->assetGroups))
+		{
+			$assetGroup = $this->assetGroups[$ext];
+			$assets = '';
+
+			if( ! $assetGroup['published'])
 			{
-				$asset = $this->sortAsset($asset);
-
-				$sorted = array_merge_recursive($sorted, $asset);
+				$assetGroup['published'] = true;
+				$assets = $this->toHTML($this->get($ext));
 			}
 
-			$this->sorted = true;
-			$this->assets = $sorted;
+			return $assets;
 		}
 	}
 
+	/**
+	 * Get all of the assets
+	 * @return array
+	 */
+	public function all()
+	{
+		$all = array();
+
+		foreach(array_keys($this->assetGroups) as $key)
+		{
+			$all = array_merge($all, $this->get($key));
+		}
+
+		return $all;
+	}
+
+	/**
+	 * Get all assets with a specified extension
+	 * @param  string $ext
+	 * @return array
+	 */
+	public function get($ext)
+	{
+		return (array_key_exists($ext, $this->assetGroups)) ? $this->assetGroups[$ext]['assets'] : array();
+	}
+
+
+	// Do we need to keep this around?
+	public function sort($assets)
+	{
+		$sorted = array();
+
+		// extract extension and group assets
+		foreach($assets as $asset)
+		{
+			$asset = $this->sortAsset($asset);
+
+			$sorted = array_merge_recursive($sorted, $asset);
+		}
+
+		return $sorted;
+	}
+
+	/**
+	 * Sort an asset into an array with the file extension as a key
+	 * @param  string $asset
+	 * @return array
+	 */
 	public function sortAsset($asset)
 	{
 		preg_match('/\.([^.]*)$/', $asset, $matches);
-		$ext = $matches[1];
+		$ext = strtolower($matches[1]);
 
 		return ($ext) ? array($ext => $asset) : $asset;
 	}
 
+	public function toHTML($type, $assets)
+	{
+		$html = '';
+
+		foreach($assets as $asset)
+		{
+			$html .= $this->generateAssetLink($type, $asset)."\n";
+		}
+
+		return $html;
+	}
+
+	/**
+	 * Helper to generate relevant HTML includes for assets
+	 * @param  string $type     type of asset
+	 * @param  string $filename asset's filename
+	 * @return string           HTML include
+	 */
+	public function generateAssetLink($type, $filename)
+	{
+		$link = '';
+
+		$filename = asset('packages/' . $filename);
+
+		switch ($type) {
+			case 'css':
+				$link = '<link rel="stylesheet" href="'.$filename.'">';
+				break;
+			case 'js':
+				$link = '<script src="'.$filename.'"></script>';
+				break;
+		}
+
+		return $link;
+	}
+
+	public function __get($key)
+	{
+		return $this->publish(strtolower($key));
+	}
+
+	public function __toString()
+	{
+		return $this->publishAll();
+	}
+
+
 	public function merge(AssetCollection $collection)
 	{
-
+		// both collections should be sorted
+		$result = array_merge_recursive($this->all(), $collection->all());
 	}
 
 

@@ -207,7 +207,7 @@ class Model {
 			}
 		}
 
-		//var_dump($assets);
+		dd($assets);
 
 		$output = '';
 		foreach($assets as $assetType => $assetGroup)
