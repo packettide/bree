@@ -10,6 +10,7 @@ class Model {
 	public $fields;
 
 	protected $fieldsets = array();
+	protected $assets;
 
 
 	public function __construct($model, array $fields = array())
@@ -195,30 +196,23 @@ class Model {
 
 	public function assets()
 	{
-		$assets = array();
-
-		foreach($this->fieldsets as $fieldset)
+		if(! $this->assets)
 		{
-			$fieldSetAssets = FieldSetProvider::get($fieldset)->assets();
+			$assets = new AssetCollection;
 
-			if($fieldSetAssets)
+			foreach($this->fieldsets as $fieldset)
 			{
-				$assets = array_merge_recursive($assets, $fieldSetAssets);
+				$fieldset = FieldSetProvider::get($fieldset);
+				// Combine the fieldset assets with its associated fieltype assets
+				$fieldSetAssets = $fieldset->assets()->merge($fieldset->fieldTypeAssets());
+
+				$assets = $assets->merge($fieldSetAssets);
 			}
+
+			$this->assets = $assets;
 		}
 
-		dd($assets);
-
-		$output = '';
-		foreach($assets as $assetType => $assetGroup)
-		{
-			foreach($assetGroup as $asset)
-			{
-				$output .= $asset . "\n";
-			}
-		}
-
-		return $output;
+		return $this->assets;
 	}
 
 	/**

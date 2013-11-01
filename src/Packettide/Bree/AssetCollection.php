@@ -6,7 +6,10 @@ class AssetCollection {
 
 	public function __construct($assets=array())
 	{
-
+		foreach($assets as $asset)
+		{
+			$this->add($asset);
+		}
 	}
 
 	/**
@@ -22,16 +25,16 @@ class AssetCollection {
 			$this->assetGroups[key($asset)] = array('assets' => array(), 'published' => false);
 		}
 
-		$this->assetGroups = array_merge_recursive($this->assetGroups, $asset);
+		$this->assetGroups = array_merge_recursive($this->assetGroups, array(key($asset) => array('assets' => array_values($asset))));
 	}
 
-	public function publishAll($ext)
+	public function publishAll()
 	{
 		$all = '';
 
 		foreach(array_keys($this->assetGroups) as $key)
 		{
-			$all = array_merge($all, $this->publish($key));
+			$all .= $this->publish($key);
 		}
 
 		return $all;
@@ -46,8 +49,10 @@ class AssetCollection {
 
 			if( ! $assetGroup['published'])
 			{
-				$assetGroup['published'] = true;
-				$assets = $this->toHTML($this->get($ext));
+				echo 'not published';
+				$this->assetGroups[$ext]['published'] = true;
+				var_dump($this->assetGroups);
+				$assets = $this->toHTML($ext, $this->get($ext));
 			}
 
 			return $assets;
@@ -157,10 +162,19 @@ class AssetCollection {
 	}
 
 
-	public function merge(AssetCollection $collection)
+	public function merge($collection)
 	{
-		// both collections should be sorted
-		$result = array_merge_recursive($this->all(), $collection->all());
+		if(is_array($collection))
+		{
+			$collection = new static($collection);
+		}
+
+		if($collection instanceof AssetCollection)
+		{
+			// both collections should be sorted
+			$result = array_merge_recursive($this->all(), $collection->all());
+			return new static($result);
+		}
 	}
 
 

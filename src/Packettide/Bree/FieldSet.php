@@ -95,16 +95,16 @@ abstract class FieldSet {
 	 */
 	public function assets()
 	{
-		$assets = array();
+		// $assets = array();
 
-		// Make sure the assets are only published once
-		if(!isset($this->assetsPublished[$this->getName()]))
-		{
-			$this->assetsPublished[$this->getName()] = true;
-			$assets = $this->publishAssets();
-		}
+		// // Make sure the assets are only published once
+		// if(!isset($this->assetsPublished[$this->getName()]))
+		// {
+		// 	$this->assetsPublished[$this->getName()] = true;
+		// 	$assets = $this->publishAssets();
+		// }
 
-		return $assets;
+		return $this->assets;
 	}
 
 	/**
@@ -143,23 +143,14 @@ abstract class FieldSet {
 	 */
 	public function fieldTypeAssets()
 	{
-		$paths = array();
+		$assets = new AssetCollection;
 
 		foreach($this->fieldtypes as $fieldtype)
 		{
-			// @todo Abstract this out to a helper method, same as above for fieldsets
-			$assetCollection = $this->sortAssets($fieldtype::assets());
-
-			foreach($assetCollection as $assetType => $assets)
-			{
-				foreach($assets as $asset)
-				{
-					$paths[$assetType][] = $this->generateAssetLink($assetType, $asset );
-				}
-			}
+			$assets = $assets->merge($fieldtype::assets());
 		}
 
-		return $paths;
+		return $assets;
 	}
 
 	/**
