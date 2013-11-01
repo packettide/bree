@@ -38,10 +38,13 @@ class Matrix extends FieldTypeRelation {
 				\$('#add-row-{$this->name}').click(function () {
 					\$('#{$this->name}-body').append(template());
 				});
-				\$('.delete-row-{$this->name}').click(function () {
+				\$('body').on('click', '.delete-row-{$this->name}', function () {
 					\$(this).parents('tr').hide();
 					var id = \$(this).parents('tr').find('input[type=hidden]').val();
 					\$(this).parents('form').append('<input type=\"hidden\" name=\"mt_{$this->name}[_mt_delete][]\" value=\"'+id+'\">')
+					if(id === '-1') {
+						\$(this).parents('tr').remove();
+					}
 					return false;
 				});
 			});
