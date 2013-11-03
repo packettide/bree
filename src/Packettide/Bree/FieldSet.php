@@ -85,9 +85,7 @@ abstract class FieldSet {
 		{
 			$assets->put($fieldtype, $fieldtype::assets());
 		}
-		// echo '--';
-		// var_dump($assets);
-		// echo '--';
+
 		return $assets;
 	}
 

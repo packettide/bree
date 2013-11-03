@@ -38,26 +38,22 @@ class AssetsCommand extends Command {
 	 */
 	public function fire()
 	{
-		// @todo loop through all registered field packages and call asset:publish on their root namespace
-		//$this->call('asset:publish', array('package' => 'packettide/bree'));
-		//$this->call('asset:publish', array('package' => 'packettide/bree-fs-advanced'));
 
 		$packages = array();
 		$fieldsets = FieldSetProvider::all();
 
-		# This is all bad but I wanted a solution to this sooner than rewriting asset handling
-		# @todo clean this up when new asset handling is implemented
 		foreach($fieldsets as $fieldset)
 		{
-			if(!empty($fieldset->getAssets()))
+			if(!$fieldset::assets()->isEmpty())
 			{
 				$packages = $this->addPackageClass(get_class($fieldset), $packages);
 			}
 
 			$fieldtypes = $fieldset->allFieldTypes();
+
 			foreach($fieldtypes as $fieldtype)
 			{
-				if(!empty($fieldtype::assets()))
+				if(!$fieldtype::assets()->isEmpty())
 				{
 					$packages = $this->addPackageClass($fieldtype, $packages);
 				}
@@ -77,7 +73,7 @@ class AssetsCommand extends Command {
 				try
 				{
 					$this->call('asset:publish', array('--bench' => $package));
-					$this->line('Assets published from workbench: '.$package);
+					$this->comment('Assets published from workbench: '.$package);
 				}
 				catch(\Exception $e)
 				{

@@ -97,6 +97,15 @@ class Bundle {
 	}
 
 	/**
+	 * Indicate whether the Bundle is empty or not
+	 * @return boolean
+	 */
+	public function isEmpty()
+	{
+		return empty($this->assetGroups);
+	}
+
+	/**
 	 * Sort an asset into an array with the file extension as a key
 	 * @param  string $asset
 	 * @return array

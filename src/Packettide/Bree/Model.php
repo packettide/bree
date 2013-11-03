@@ -196,39 +196,21 @@ class Model {
 
 	public function assets()
 	{
-		// var_dump($this->assets);
-		// if(! $this->assets)
-		// {
+
+		if(! $this->assets)
+		{
 			$assets = new Assets\Collection;
 
 			foreach($this->fieldsets as $fieldset)
 			{
 				$fieldset = FieldSetProvider::get($fieldset);
-				// Combine the fieldset assets with its associated fieltype assets
-				//$fieldSetAssets = $fieldset->assets()->merge($fieldset->fieldTypeAssets());
 
-				// $assets = $assets->merge($fieldSetAssets);
-				// var_dump($fieldset::assets());
-
-
-				// var_dump($fieldset->getName());
-				// var_dump($fieldset);
 				$assets->put(get_class($fieldset), $fieldset::assets());
 				$assets = $assets->merge($fieldset->fieldTypeAssets());
-				// var_dump($assets);
-				// var_dump($fieldset->fieldTypeAssets());
-				// $assets .= $fieldset::assets()->publishAll();
-				// var_dump($fieldset->fieldTypeAssets());
-
-				// we can't do a merge we need to have the original fielset::assets retain published information
-				// the merge wipes this away
-				// $assets = $assets->merge($fieldset::assets());
-				// var_dump($assets);
-				// echo "FS ---------\n\n";
 			}
 
 			$this->assets = $assets;
-		// }
+		}
 
 		return $this->assets;
 	}
