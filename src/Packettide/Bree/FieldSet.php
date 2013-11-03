@@ -3,14 +3,8 @@
 abstract class FieldSet {
 
 	protected $fieldtypes = array();
-	protected $assets = array();
-	protected $assetsPublished = array();
+	protected static $assets = array();
 	public $name;
-
-	public function __construct()
-	{
-		$this->assets = new AssetCollection();
-	}
 
 	/**
 	 * Retrieve the FieldSet's name
@@ -57,84 +51,26 @@ abstract class FieldSet {
 	}
 
 	/**
-	 * Sort the FieldSets assets into buckets based on extension
-	 * @param  array $assets
-	 * @return array
-	 */
-	public function sortAssets($assets)
-	{
-		$sorted = array();
-
-		// extract extension and group assets
-		foreach($assets as $asset)
-		{
-			preg_match('/\.([^.]*)$/', $asset, $matches);
-			$ext = $matches[1];
-
-			if($ext)
-			{
-				$sorted[$ext][] = $asset;
-			}
-		}
-
-		return $sorted;
-	}
-
-	/**
 	 * Return FieldSet's assets
 	 * @return array
 	 */
 	public function getAssets()
 	{
-		return $this->assets;
+		return static::$assets;
 	}
 
 	/**
 	 * Retrieve the assets for a fieldset
 	 * @return array
 	 */
-	public function assets()
+	public static function assets()
 	{
-		// $assets = array();
-
-		// // Make sure the assets are only published once
-		// if(!isset($this->assetsPublished[$this->getName()]))
-		// {
-		// 	$this->assetsPublished[$this->getName()] = true;
-		// 	$assets = $this->publishAssets();
-		// }
-
-		return $this->assets;
-	}
-
-	/**
-	 * Merge assets for the FieldSet with all dependent FieldTypes
-	 * @return array
-	 */
-	public function publishAssets()
-	{
-		$allAssets = array_merge_recursive($this->fieldSetAssets(), $this->fieldTypeAssets());
-		return $allAssets;
-	}
-
-	/**
-	 * Generate an array of assets for the FieldSet
-	 * @return array
-	 */
-	public function fieldSetAssets()
-	{
-		$paths = array();
-		$assetCollection = $this->sortAssets($this->assets);
-
-		foreach($assetCollection as $assetType => $assets)
+		if(is_array(static::$assets))
 		{
-			foreach($assets as $asset)
-			{
-				$paths[$assetType][] = $this->generateAssetLink($assetType, $asset);
-			}
+			static::$assets = new Assets\Bundle(static::$assets);
 		}
 
-		return $paths;
+		return static::$assets;
 	}
 
 	/**
@@ -143,38 +79,16 @@ abstract class FieldSet {
 	 */
 	public function fieldTypeAssets()
 	{
-		$assets = new AssetCollection;
+		$assets = new Assets\Collection;
 
 		foreach($this->fieldtypes as $fieldtype)
 		{
-			$assets = $assets->merge($fieldtype::assets());
+			$assets->put($fieldtype, $fieldtype::assets());
 		}
-
+		// echo '--';
+		// var_dump($assets);
+		// echo '--';
 		return $assets;
-	}
-
-	/**
-	 * Helper to generate relevant HTML includes for assets
-	 * @param  string $type     type of asset
-	 * @param  string $filename asset's filename
-	 * @return string           HTML include
-	 */
-	public function generateAssetLink($type, $filename)
-	{
-		$link = '';
-
-		$filename = asset('packages/' . $filename);
-
-		switch ($type) {
-			case 'css':
-				$link = '<link rel="stylesheet" href="'.$filename.'">';
-				break;
-			case 'js':
-				$link = '<script src="'.$filename.'"></script>';
-				break;
-		}
-
-		return $link;
 	}
 
 }

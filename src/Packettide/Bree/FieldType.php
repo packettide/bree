@@ -96,7 +96,13 @@ class FieldType {
 			return $key.'="'.e($value).'"';
 	}
 
-	public static function assets() {
+	public static function assets()
+	{
+		if(is_array(static::$assets))
+		{
+			static::$assets = new Assets\Bundle(static::$assets);
+		}
+
 		return static::$assets;
 	}
 

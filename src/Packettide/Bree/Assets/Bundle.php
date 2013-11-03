@@ -1,9 +1,17 @@
-<?php namespace Packettide\Bree;
+<?php namespace Packettide\Bree\Assets;
 
-class AssetCollection {
+class Bundle {
 
+	/**
+	 * A 2d array of assets organized by extension
+	 * @var array
+	 */
 	protected $assetGroups = array();
 
+	/**
+	 * Load an array of assets into the bundle
+	 * @param array $assets
+	 */
 	public function __construct($assets=array())
 	{
 		foreach($assets as $asset)
@@ -22,17 +30,21 @@ class AssetCollection {
 
 		if(!array_key_exists(key($asset), $this->assetGroups))
 		{
-			$this->assetGroups[key($asset)] = array('assets' => array(), 'published' => false);
+			$this->assetGroups[key($asset)] = array();
 		}
 
-		$this->assetGroups = array_merge_recursive($this->assetGroups, array(key($asset) => array('assets' => array_values($asset))));
+		$this->assetGroups[key($asset)] = array_merge($this->assetGroups[key($asset)], array_values($asset));
 	}
 
+	/**
+	 * Publish all asset groups in the bundle
+	 * @return string
+	 */
 	public function publishAll()
 	{
 		$all = '';
 
-		foreach(array_keys($this->assetGroups) as $key)
+		foreach($this->assetGroups as $key => $value)
 		{
 			$all .= $this->publish($key);
 		}
@@ -40,19 +52,25 @@ class AssetCollection {
 		return $all;
 	}
 
+	/**
+	 * Publish assets with a chosen extension in the bundle
+	 * @param  string $ext
+	 * @return string
+	 */
 	public function publish($ext)
 	{
-		if(array_key_exists($ext, $this->assetGroups))
+		if(array_key_exists($ext, $this->assetGroups) && !empty($this->assetGroups[$ext]))
 		{
-			$assetGroup = $this->assetGroups[$ext];
 			$assets = '';
 
-			if( ! $assetGroup['published'])
+			foreach($this->assetGroups[$ext] as &$asset)
 			{
-				echo 'not published';
-				$this->assetGroups[$ext]['published'] = true;
-				var_dump($this->assetGroups);
-				$assets = $this->toHTML($ext, $this->get($ext));
+				// Assets should only be "published" once per page request
+				if(!isset($asset['published']))
+				{
+					$asset['published'] = true;
+					$assets .= $this->generateAssetLink($ext, $asset['path'])."\n";
+				}
 			}
 
 			return $assets;
@@ -65,14 +83,7 @@ class AssetCollection {
 	 */
 	public function all()
 	{
-		$all = array();
-
-		foreach(array_keys($this->assetGroups) as $key)
-		{
-			$all = array_merge($all, $this->get($key));
-		}
-
-		return $all;
+		return $this->assetGroups;
 	}
 
 	/**
@@ -85,23 +96,6 @@ class AssetCollection {
 		return (array_key_exists($ext, $this->assetGroups)) ? $this->assetGroups[$ext]['assets'] : array();
 	}
 
-
-	// Do we need to keep this around?
-	public function sort($assets)
-	{
-		$sorted = array();
-
-		// extract extension and group assets
-		foreach($assets as $asset)
-		{
-			$asset = $this->sortAsset($asset);
-
-			$sorted = array_merge_recursive($sorted, $asset);
-		}
-
-		return $sorted;
-	}
-
 	/**
 	 * Sort an asset into an array with the file extension as a key
 	 * @param  string $asset
@@ -112,19 +106,9 @@ class AssetCollection {
 		preg_match('/\.([^.]*)$/', $asset, $matches);
 		$ext = strtolower($matches[1]);
 
+		// nest the path so we can later add a flag for published
+		$asset = array('path' => $asset);
 		return ($ext) ? array($ext => $asset) : $asset;
-	}
-
-	public function toHTML($type, $assets)
-	{
-		$html = '';
-
-		foreach($assets as $asset)
-		{
-			$html .= $this->generateAssetLink($type, $asset)."\n";
-		}
-
-		return $html;
 	}
 
 	/**
@@ -150,32 +134,5 @@ class AssetCollection {
 
 		return $link;
 	}
-
-	public function __get($key)
-	{
-		return $this->publish(strtolower($key));
-	}
-
-	public function __toString()
-	{
-		return $this->publishAll();
-	}
-
-
-	public function merge($collection)
-	{
-		if(is_array($collection))
-		{
-			$collection = new static($collection);
-		}
-
-		if($collection instanceof AssetCollection)
-		{
-			// both collections should be sorted
-			$result = array_merge_recursive($this->all(), $collection->all());
-			return new static($result);
-		}
-	}
-
 
 }
