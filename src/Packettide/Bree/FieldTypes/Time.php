@@ -4,10 +4,9 @@ use Packettide\Bree\FieldType;
 
 class Time extends FieldType {
 
-	public function field($attributes = array())
+	public function generateField($name, $data, $attributes = array())
 	{
-		$attrs = $this->getFieldAttributes($attributes);
-		return '<input name="'.$this->name.'" value="'.$this->data.'"  id="'.$this->name.'" '.$attrs.' type="time" />';
+		return '<input name="'.$name.'" value="'.$data.'"  id="'.$name.'" '.$attributes.' type="time" />';
 	}
 
 

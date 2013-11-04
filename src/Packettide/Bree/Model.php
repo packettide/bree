@@ -12,6 +12,8 @@ class Model {
 	protected $fieldsets = array();
 	protected $assets;
 
+	protected $events = array();
+
 
 	public function __construct($model, array $fields = array())
 	{
@@ -93,6 +95,7 @@ class Model {
 				$data->relation = $this->fetchRelation($key);
 			}
 		}
+		$data->withEvents($this->events);
 		return $data;
 	}
 
@@ -313,6 +316,9 @@ class Model {
 	 */
 	public function __set($key, $value)
 	{
+		if(strpos($key, 'cell_') === 0) {
+			$key = substr($key, 5);
+		}
 		$ft = $this->getField($key, $value, $this->fields[$key]);
 
 		if($this->isNew())
@@ -338,6 +344,11 @@ class Model {
 	public function __toString()
 	{
 		return $this->assets() . $this->fields();
+	}
+
+	public function attachObserver($event, $fn)
+	{
+		$this->events[$event] = $fn;
 	}
 
 }

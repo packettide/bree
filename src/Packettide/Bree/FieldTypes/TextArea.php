@@ -4,10 +4,9 @@ use Packettide\Bree\FieldType;
 
 class TextArea extends FieldType {
 
-	public function field($attributes = array())
+	public function generateField($name, $data, $attributes = array())
 	{
-		$attrs = $this->getFieldAttributes($attributes);
-		return '<textarea name="'.$this->name.'" id="'.$this->name.'"'.$attrs.'>'.$this->data.'</textarea>';
+		return '<textarea name="'.$name.'" id="'.$name.'"'.$attributes.'>'.$data.'</textarea>';
 	}
 
 

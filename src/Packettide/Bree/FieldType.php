@@ -10,6 +10,8 @@ class FieldType {
 	protected $reserved = array('label', 'name', 'type', 'fieldset', '_bree_field_class');
 	protected static $assets = array();
 
+	private $prefix = "";
+
 	public function __construct($name, $data, $options=array())
 	{
 		$this->name = $name;
@@ -25,7 +27,16 @@ class FieldType {
 		$this->attributes = $this->removeReservedAttributes($options);
 	}
 
-	public function field($attributes = array()) {}
+	public function withEvents($events)
+	{
+		$this->events = $events;
+	}
+
+	public function field($attributes = array()) {
+		$attrs = $this->getFieldAttributes($attributes);
+		list($name, $data, $attrs) = $this->renderHook($attrs);
+		return $this->generateField($name, $data, $attrs);
+	}
 
 	public function save() {}
 
@@ -121,6 +132,23 @@ class FieldType {
 	public function __toString()
 	{
 		return $this->label() . $this->field();
+	}
+
+	public function renderHook($attrs)
+	{
+		if (isset($this->events['field.render']))
+		{
+			 return $this->events['field.render']($this->name, $this->data, $attrs);
+		}
+		else
+		{
+			return array($this->name, $this->data, $attrs);
+		}
+	}
+
+	public function getPrefix()
+	{
+		return $this->prefix;
 	}
 
 

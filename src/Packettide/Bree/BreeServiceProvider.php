@@ -48,10 +48,16 @@ class BreeServiceProvider extends ServiceProvider {
 			'File' => 'Packettide\Bree\FieldTypes\File',
 			'InlineStacked' => 'Packettide\Bree\FieldTypes\Relate', // keep this alias around for a bit
 			'Relate' => 'Packettide\Bree\FieldTypes\Relate',
-			'Matrix' => 'Packettide\Bree\FieldTypes\None',
 			'Text' => 'Packettide\Bree\FieldTypes\Text',
 			'TextArea' => 'Packettide\Bree\FieldTypes\TextArea',
 			'Time' => 'Packettide\Bree\FieldTypes\Time'
+		));
+
+		// Attach first party fields
+		FieldSetProvider::attachFields('advanced', array(
+			'Matrix' => 'Packettide\Bree\FieldTypes\Cell',
+			'Cell' => 'Packettide\Bree\FieldTypes\Cell',
+			'Cells' => 'Packettide\Bree\FieldTypes\Cell',
 		));
 
 		$this->app['bree'] = $this->app->share(function($app)
