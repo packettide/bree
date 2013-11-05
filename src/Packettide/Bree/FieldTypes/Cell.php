@@ -32,7 +32,7 @@ class Cell extends FieldTypeRelation {
 		}
 
 		$markup  = "<table $attrs><thead>" . $this->generateHeaders($row) . "</thead><tbody id='".$this->name."-body'>" . $options . "</tbody></table><a id='add-row-".$this->name."'>+ Add Row</a>";
-		$markup = "<script type='x-handlebars-template' id='".$this->name."-row'>" . $this->generateRow(get_class($row)) . "</script>" . $markup;
+		$markup = "<template type='x-handlebars-template' id='".$this->name."-row'>" . $this->generateRow(get_class($row)) . "</template>" . $markup;
 		$markup = "<script>
 			\$(function () {
 				var source   = \$('#{$this->name}-row').html();
@@ -117,10 +117,10 @@ class Cell extends FieldTypeRelation {
 
 		$newData = array();
 
-		for ($i=0; $i < $headLen; $i++) { 
-			$newData[$i] = array(); 
+		for ($i=0; $i < $headLen; $i++) {
+			$newData[$i] = array();
 			foreach (array_except($this->data, '_'.$this->prefix.'delete') as $key => $value) {
-				if ($key != "id" || $value[$i] != -1) 
+				if ($key != "id" || $value[$i] != -1)
 				{
 					$newData[$i][$key] = $value[$i];
 				}
