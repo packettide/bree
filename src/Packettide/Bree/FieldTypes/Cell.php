@@ -39,6 +39,7 @@ class Cell extends FieldTypeRelation {
 				var template = Handlebars.compile(source);
 				\$('#add-row-{$this->name}').click(function () {
 					\$('#{$this->name}-body').append(template());
+					\$(this).trigger('bree.cell.add');
 				});
 				\$('body').on('click', '.delete-row-{$this->name}', function () {
 					\$(this).parents('tr').hide();
