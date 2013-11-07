@@ -239,19 +239,22 @@ class Model {
 	 */
 	public function saveAndDisplay()
 	{
-		if (!empty($_POST)) {
-			foreach ($this->fields as $key => $value) {
-				// $value is not used
+		if (!empty($_POST) || !empty($_FILES)) {
 
-				if(isset($_POST[$key]))
+			$inputs = array_merge_recursive($_POST, $_FILES);
+			dd($_FILES);
+			dd($inputs);
+			foreach($inputs as $key => $value)
+			{
+				// Strip off cell_ but this should be generalized to any fieldtype prefix
+				$modelKey = (strpos($key, 'cell_') === 0) ? substr($key, 5) : $key;
+
+				if(array_key_exists($modelKey, $this->fields))
 				{
-					$this->$key = $_POST[$key];
-				}
-				else if(isset($_FILES[$key]) && !empty($_FILES[$key]['tmp_name']))
-				{
-					$this->$key = $_FILES[$key];
+					$this->$modelKey = $inputs[$key];
 				}
 			}
+
 			$this->save();
 		}
 		echo $this;
