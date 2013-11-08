@@ -100,20 +100,6 @@ class Cell extends FieldTypeRelation {
 	{
 		if(empty($this->data)) return;
 
-
-		var_dump($this->data);
-		// First we need to clear out any relations that were marked for deletion
-		$this->data['_'.$this->prefix.'delete'] = isset($this->data['_'.$this->prefix.'delete'])? $this->data['_'.$this->prefix.'delete'] : array();
-
-		foreach ($this->data['_'.$this->prefix.'delete'] as $value) {
-			var_dump($value);
-			if ($value != -1)
-			{
-				$this->related->destroy($value);
-			}
-		}
-
-
 		// Clean up the array structure
 		$headLen = count(head(array_except($this->data, '_'.$this->prefix.'delete')));
 
@@ -128,6 +114,26 @@ class Cell extends FieldTypeRelation {
 				}
 			}
 		}
+
+		//Clear out any relations that were marked for deletion
+		$deleteIDs = isset($this->data['_'.$this->prefix.'delete']) ? $this->data['_'.$this->prefix.'delete'] : array();
+
+		foreach ($deleteIDs as $id) {
+			if ($id != -1)
+			{
+				$this->related->destroy($id);
+
+				// Make sure all data associated with this id is removed from any further processing
+				foreach($newData as $key => $value)
+				{
+					if(isset($value['id']) && in_array($value['id'], $deleteIDs))
+					{
+						unset($newData[$key]);
+					}
+				}
+			}
+		}
+
 
 		foreach ($newData as $row) {
 			// @todo - This could be cleaned up with a way to generate new instances from existing Bree\Model
