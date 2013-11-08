@@ -1,6 +1,7 @@
 <?php namespace Packettide\Bree\FieldTypes;
 
 use Packettide\Bree\FieldType;
+use \Symfony\Component\HttpFoundation\File\UploadedFile;
 
 class File extends FieldType {
 
@@ -27,14 +28,28 @@ class File extends FieldType {
 	{
 		if(empty($this->data)) return;
 
-		$fileLocation = ($this->directory != '') ? $this->directory : '';
-		// replace spaces
-		$fileLocation .= $this->data['name'];
-		if(move_uploaded_file($this->data['tmp_name'], $fileLocation))
+		$fileLocation = ($this->directory) ? $this->directory : '';
+
+		if(! $this->data instanceof UploadedFile)
 		{
-			$this->data = str_replace(public_path(), '', $fileLocation);
+			if(is_array($this->data) && isset($this->data['name']) && isset($this->data['tmp_name']))
+			{
+				$this->data = new UploadedFile($this->data['tmp_name'], $this->data['name']);
+			}
+			else
+			{
+				throw new \Exception('Invalid File');
+			}
 		}
-		else
+
+		$fileName = $this->data->getClientOriginalName();
+
+		try
+		{
+			$file = $this->data->move($fileLocation, $fileName);
+			$this->data = str_replace(public_path(), '', $fileLocation.$fileName);
+		}
+		catch(\Exception $e)
 		{
 			$this->data = '';
 		}

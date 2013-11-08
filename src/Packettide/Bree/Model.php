@@ -192,14 +192,28 @@ class Model {
 		return $relation;
 	}
 
+	/**
+	 * Determine whether this model represents new or existing data
+	 * @return boolean
+	 */
 	public function isNew()
 	{
-		return $this->baseModelInstance->id == null;
+		if($this->baseModelInstance)
+		{
+			return $this->baseModelInstance->id == null;
+		}
+		else
+		{
+			return true;
+		}
 	}
 
+	/**
+	 * Generate the model Assets
+	 * @return Packettide\Bree\Assets\Collection
+	 */
 	public function assets()
 	{
-
 		if(! $this->assets)
 		{
 			$assets = new Assets\Collection;
@@ -239,11 +253,12 @@ class Model {
 	 */
 	public function saveAndDisplay()
 	{
-		if (!empty($_POST) || !empty($_FILES)) {
+		$request = \Symfony\Component\HttpFoundation\Request::createFromGlobals();
+		$input =  $request->getMethod() == 'GET' ? $request->query : $request->request;
 
-			$inputs = array_merge_recursive($_POST, $_FILES);
-			dd($_FILES);
-			dd($inputs);
+		$inputs = array_merge_recursive($input->all(), $request->files->all());
+
+		if ($inputs) {
 			foreach($inputs as $key => $value)
 			{
 				// Strip off cell_ but this should be generalized to any fieldtype prefix
@@ -322,6 +337,7 @@ class Model {
 		if(strpos($key, 'cell_') === 0) {
 			$key = substr($key, 5);
 		}
+
 		$ft = $this->getField($key, $value, $this->fields[$key]);
 
 		if($this->isNew())

@@ -54,20 +54,6 @@ class Cell extends FieldTypeRelation {
 		</script>" . $markup;
 		return $markup;
 
-		// if($this->select === false)
-		// {
-		// 	return $options;
-		// }
-
-		// if($this->hasMultiple())
-		// {
-		// 	return '<select multiple name="'.$this->name.'[]" id="'.$this->name.'"'.$attrs.'>'. $options .'</select>';
-		// }
-		// else
-		// {
-		// 	return '<select name="'.$this->name.'" id="'.$this->name.'"'.$attrs.'>'. $options .'</select>';
-		// }
-
 	}
 
 	public function generateHeaders($row)
@@ -114,52 +100,54 @@ class Cell extends FieldTypeRelation {
 	{
 		if(empty($this->data)) return;
 
+
+		var_dump($this->data);
+		// First we need to clear out any relations that were marked for deletion
+		$this->data['_'.$this->prefix.'delete'] = isset($this->data['_'.$this->prefix.'delete'])? $this->data['_'.$this->prefix.'delete'] : array();
+
+		foreach ($this->data['_'.$this->prefix.'delete'] as $value) {
+			var_dump($value);
+			if ($value != -1)
+			{
+				$this->related->destroy($value);
+			}
+		}
+
+
+		// Clean up the array structure
 		$headLen = count(head(array_except($this->data, '_'.$this->prefix.'delete')));
 
 		$newData = array();
-		dd($this->data);
+
 		for ($i=0; $i < $headLen; $i++) {
 			$newData[$i] = array();
 			foreach (array_except($this->data, '_'.$this->prefix.'delete') as $key => $value) {
-				//var_dump($newData);
-				dd($value);
-				var_dump($key);
 				if ($key != "id" || $value[$i] != -1)
 				{
-					$temp = array($key => $value[$i]);
-					dd($temp);
-					// $newData[$i][$key] = $value[$i];
+					$newData[$i][$key] = $value[$i];
 				}
 			}
 		}
 
-		foreach ($newData as $related) {
-			// Loop through each row's fields and run field->save()
+		foreach ($newData as $row) {
+			// @todo - This could be cleaned up with a way to generate new instances from existing Bree\Model
+			$rowModel = (isset($row['id'])) ? $this->related->find($row['id']) : new \Packettide\Bree\Model($this->related->baseModel);
 
-			if (isset($related['id']))
+			// We loop through each row and set the attributes
+			// so that the Bree\Model can call save() on each field
+			foreach(array_except($row, 'id') as $key => $value)
 			{
-				$this->related->baseModel->find($related['id'])->update(array_except($related, 'id'));
-				$newMember = $this->related->baseModel->find($related['id']);
+				$rowModel->$key = $value;
 			}
-			else
-			{
-				$newMember = $this->related->create($related);
-			}
-			if ($newMember instanceof \Packettide\Bree\Model)
-			{
-				$newMember = $newMember->baseModel;
-			}
-			$this->relation->save($newMember);
+
+			$rowModel->save();
+
+			if ($rowModel instanceof \Packettide\Bree\Model)
+				$rowModel = $rowModel->baseModelInstance;
+
+			$this->relation->save($rowModel);
 		}
 
-		$this->data['_'.$this->prefix.'delete'] = isset($this->data['_'.$this->prefix.'delete'])? $this->data['_'.$this->prefix.'delete'] : array();
-
-		foreach ($this->data['_'.$this->prefix.'delete'] as $value) {
-			if ($value != -1)
-			{
-				$this->related->baseModel->destroy($value);
-			}
-		}
 	}
 
 
