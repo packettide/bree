@@ -19,12 +19,13 @@ class Cell extends FieldTypeRelation {
 		$chosen = $this->data;
 		$options = '';
 
+		$row =  $this->related->baseModel;
 
 		if($available instanceof Collection)
 		{
 			foreach($available as $row)
 			{
-				if($chosen->contains($row->getKey()))
+				if($chosen != null && $chosen->contains($row->getKey()))
 				{
 					$options .= $this->generateRow($row);
 				}
