@@ -5,6 +5,10 @@ use \Symfony\Component\HttpFoundation\File\UploadedFile;
 
 class File extends FieldType {
 
+	protected static $assets = array(
+			'packettide/bree/file.js'
+		);
+
 	public function __construct($name, $data, $options=array())
 	{
 		// Add another reserved attribute for file fieldtype
@@ -15,8 +19,16 @@ class File extends FieldType {
 
 	public function generateField($name, $data, $attributes = array())
 	{
-		$output = '<input type="file" name="'.$name.'" id="'.$name.'"'.$attributes.'/>';
-		if($data) $output .= '<a target="_blank" href="'.$data.'">View File: '.$data.'</a>';
+		if($data)
+		{
+			$output = '<input type="hidden" name="'.$name.'" id="'.$name.'" value="'.$data.'"'.$attributes.'/>' .
+					  '<a class="bree-file-view" target="_blank" href="'.$data.'">View File: '.$data.'</a> ' .
+					  '<a class="bree-file-remove" data-field="'.$name.'" href="#">Remove File</a>';
+		}
+		else
+		{
+			$output = '<input type="file" name="'.$name.'" id="'.$name.'"'.$attributes.'/>';
+		}
 
 		return $output;
 	}
@@ -29,6 +41,9 @@ class File extends FieldType {
 		if(empty($this->data)) return;
 
 		$fileLocation = ($this->directory) ? $this->directory : '';
+
+		// If we have a string and it represents a saved filelocation do nothing
+		if (is_string($this->data) && strpos($this->data, $this->removePublicPath($fileLocation)) !== false) return $this->data;
 
 		if(! $this->data instanceof UploadedFile)
 		{
@@ -47,13 +62,17 @@ class File extends FieldType {
 		try
 		{
 			$file = $this->data->move($fileLocation, $fileName);
-			$this->data = str_replace(public_path(), '', $fileLocation.$fileName);
+			$this->data = $this->removePublicPath($fileLocation.$fileName);
 		}
 		catch(\Exception $e)
 		{
 			$this->data = '';
 		}
+	}
 
+	public function removePublicPath($path)
+	{
+		return str_replace(public_path(), '', $path);
 	}
 
 

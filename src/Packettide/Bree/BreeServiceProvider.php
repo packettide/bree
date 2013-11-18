@@ -42,22 +42,22 @@ class BreeServiceProvider extends ServiceProvider {
 		// Register the Advanced FieldSet
 		FieldSetProvider::register('Packettide\BreeFsAdvanced\AdvancedFieldSet');
 
-		// Attach first party fields
+		// Attach first party Basic fields
 		FieldSetProvider::attachFields('basic', array(
-			'Date' => 'Packettide\Bree\FieldTypes\Date',
-			'File' => 'Packettide\Bree\FieldTypes\File',
+			'Date'          => 'Packettide\Bree\FieldTypes\Date',
 			'InlineStacked' => 'Packettide\Bree\FieldTypes\Relate', // keep this alias around for a bit
-			'Relate' => 'Packettide\Bree\FieldTypes\Relate',
-			'Text' => 'Packettide\Bree\FieldTypes\Text',
-			'TextArea' => 'Packettide\Bree\FieldTypes\TextArea',
-			'Time' => 'Packettide\Bree\FieldTypes\Time'
+			'Relate'        => 'Packettide\Bree\FieldTypes\Relate',
+			'Text'          => 'Packettide\Bree\FieldTypes\Text',
+			'TextArea'      => 'Packettide\Bree\FieldTypes\TextArea',
+			'Time'          => 'Packettide\Bree\FieldTypes\Time'
 		));
 
-		// Attach first party fields
+		// Attach first party Advanced fields
 		FieldSetProvider::attachFields('advanced', array(
+			'File'   => 'Packettide\Bree\FieldTypes\File',
+			'Cell'   => 'Packettide\Bree\FieldTypes\Cell',
+			'Cells'  => 'Packettide\Bree\FieldTypes\Cell',
 			'Matrix' => 'Packettide\Bree\FieldTypes\Cell',
-			'Cell' => 'Packettide\Bree\FieldTypes\Cell',
-			'Cells' => 'Packettide\Bree\FieldTypes\Cell',
 		));
 
 		$this->app['bree'] = $this->app->share(function($app)
