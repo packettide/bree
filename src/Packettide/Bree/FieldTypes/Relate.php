@@ -29,7 +29,7 @@ class Relate extends FieldTypeRelation {
 						$selected = true;
 					}
 				}
-				else if($chosen && $row->getKey() == $chosen) //consolidate
+				else if($chosen && $row->getKey() == $chosen->getKey()) //consolidate
 				{
 					$selected = true;
 				}
