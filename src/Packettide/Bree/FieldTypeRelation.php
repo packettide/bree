@@ -27,7 +27,7 @@ class FieldTypeRelation extends FieldType {
 		}
 		else if($relation instanceof Relations\BelongsTo)
 		{
-			$relation->associate($data);
+			$relation->associate($data)->save();
 		}
 		else if($relation instanceof Relations\BelongsToMany)
 		{
