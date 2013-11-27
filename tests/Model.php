@@ -17,6 +17,8 @@ class ModelTest extends PHPUnit_Framework_TestCase {
 	public function testBaseModelSet()
 	{
 		$baseModel = m::mock('Illuminate\Database\Eloquent\Model');
+		$baseModel->shouldReceive('hasGetMutator')->andReturn(false);
+
 		$model = new BreeModel($baseModel, $this->fields);
 
 		$this->assertInstanceOf('Illuminate\Database\Eloquent\Model', $model->baseModel);
@@ -26,6 +28,8 @@ class ModelTest extends PHPUnit_Framework_TestCase {
 	{
 		$baseModel = m::mock('Illuminate\Database\Eloquent\Model');
 		$baseModel->shouldReceive('getAttribute')->once()->andReturn(null);
+		$baseModel->shouldReceive('hasGetMutator')->andReturn(false);
+
 		$model = new BreeModel($baseModel, $this->fields);
 
 		$this->assertEquals(true, $model->isNew());
@@ -39,6 +43,7 @@ class ModelTest extends PHPUnit_Framework_TestCase {
 
 		$queryBuilder->shouldReceive('find')->once()->with(1)->andReturn($returnModel);
 		$baseModel->shouldReceive('newQuery')->once()->andReturn($queryBuilder);
+		$baseModel->shouldReceive('hasGetMutator')->andReturn(false);
 
 		$model = new BreeModel($baseModel, $this->fields);
 
@@ -55,10 +60,12 @@ class ModelTest extends PHPUnit_Framework_TestCase {
 
 		$queryBuilder->shouldReceive('find')->once()->with(1)->andReturn($returnModel);
 		$baseModel->shouldReceive('newQuery')->once()->andReturn($queryBuilder);
+		$baseModel->shouldReceive('hasGetMutator')->andReturn(false);
 		$returnModel->shouldReceive('getAttribute')->once()->with('test');
 
 		$fieldType = m::mock('Packettide\Bree\FieldType');
 		$fieldType->shouldReceive('__toString')->once()->andReturn('<fieldtype>');
+		$fieldType->shouldReceive('withEvents')->once();
 
 		$this->fields['test']['type'] = $fieldType;
 
@@ -76,11 +83,13 @@ class ModelTest extends PHPUnit_Framework_TestCase {
 
 		$queryBuilder->shouldReceive('find')->once()->with(1)->andReturn($returnModel);
 		$baseModel->shouldReceive('newQuery')->once()->andReturn($queryBuilder);
+		$baseModel->shouldReceive('hasGetMutator')->andReturn(false);
 		$returnModel->shouldReceive('getAttribute')->once()->with('id')->andReturn('1');
 		$returnModel->shouldReceive('setAttribute')->once()->with('test', 'testValue');
 
 		$fieldType = m::mock('Packettide\Bree\FieldType');
 		$fieldType->shouldReceive('save')->once()->andReturn('')->andSet('data', 'testValue');
+		$fieldType->shouldReceive('withEvents')->once();
 
 		$this->fields['test']['type'] = $fieldType;
 

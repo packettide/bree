@@ -43,10 +43,12 @@ class FieldRelateTest extends PHPUnit_Framework_TestCase {
 		$builder = m::mock('Illuminate\Database\Eloquent\Builder');
 		$builder->shouldReceive('where')->with('books.author_id', '=', 1);
 		$related = m::mock('Illuminate\Database\Eloquent\Model');
+		$related->shouldReceive('hasGetMutator')->andReturn(false);
 		$builder->shouldReceive('getModel')->andReturn($related);
 
 		$parent = m::mock('Illuminate\Database\Eloquent\Model');
 		$parent->shouldReceive('getKey')->andReturn(1);
+		$parent->shouldReceive('hasGetMutator')->andReturn(false);
 		$parent->shouldReceive('getCreatedAtColumn')->andReturn('created_at');
 		$parent->shouldReceive('getUpdatedAtColumn')->andReturn('updated_at');
 
@@ -83,7 +85,7 @@ class FieldRelateTest extends PHPUnit_Framework_TestCase {
 			'relation' => $relation
 		);
 
-		$author = new FieldTypes\Relate('author', 1, $options);
+		$author = new FieldTypes\Relate('author', $this->author1, $options);
 
 		$this->assertEquals('<select name="author" id="author"><option selected value="1">C.S. Lewis</option><option value="2">JRR Tolkien</option></select>', $author->field());
 	}
@@ -120,15 +122,19 @@ class FieldRelateTest extends PHPUnit_Framework_TestCase {
 	{
 		$available = new Collection(array($this->author1, $this->author2));
 
-		$adminModel = m::mock('Packettide\Bree\Model');
+		$baseModel = m::mock('Illuminate\Database\Eloquent\Model');
+		$baseModel->shouldReceive('hasGetMutator')->andReturn(false);
+		$baseModel->shouldReceive('save')->once();
+
+		$breeModel = m::mock('Packettide\Bree\Model');
 
 		$relation = m::mock('Illuminate\Database\Eloquent\Relations\BelongsTo');
-		$relation->shouldReceive('associate')->once();
+		$relation->shouldReceive('associate')->once()->andReturn($baseModel);
 
 		$options = array(
 			'title' => 'name',
 			'label' => 'author',
-			'related' => $adminModel,
+			'related' => $breeModel,
 			'relation' => $relation
 		);
 
