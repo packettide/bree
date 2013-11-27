@@ -2,7 +2,10 @@
 
 Bree provides an interface to associate fieldtypes with existing Eloquent model attributes.
 
-*This project is still in a very early stage and breaking changes may  be made.*
+*This project is still in a very early stage and breaking changes may be made.*
+
+[![Build Status](https://travis-ci.org/packettide/bree.png)](https://travis-ci.org/packettide/bree)
+
 
 ##Installation
 
