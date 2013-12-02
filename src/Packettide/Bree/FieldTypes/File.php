@@ -40,7 +40,7 @@ class File extends FieldType {
 	{
 		if(empty($this->data)) return;
 
-		$fileLocation = ($this->directory) ? $this->directory : '';
+		$fileLocation = ($this->directory) ? (public_path() . $this->directory) : '';
 
 		// If we have a string and it represents a saved filelocation do nothing
 		if (is_string($this->data) && strpos($this->data, $this->removePublicPath($fileLocation)) !== false) return $this->data;
