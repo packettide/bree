@@ -49,7 +49,8 @@ class BreeServiceProvider extends ServiceProvider {
 			'Relate'        => 'Packettide\Bree\FieldTypes\Relate',
 			'Text'          => 'Packettide\Bree\FieldTypes\Text',
 			'TextArea'      => 'Packettide\Bree\FieldTypes\TextArea',
-			'Time'          => 'Packettide\Bree\FieldTypes\Time'
+			'Time'          => 'Packettide\Bree\FieldTypes\Time',
+			'None'          => 'Packettide\Bree\FieldTypes\None'
 		));
 
 		// Attach first party Advanced fields
