@@ -1,3 +1,6 @@
+
+![bree](https://f.cloud.github.com/assets/563996/1727115/df8b5ae0-6299-11e3-8728-a61970b58113.png)
+
 #Bree
 
 Bree provides an interface to associate fieldtypes with existing Eloquent model attributes.
