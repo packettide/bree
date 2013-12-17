@@ -7,7 +7,7 @@ Bree provides an interface to associate fieldtypes with existing Eloquent model 
 
 *This project is still in an early stage and breaking changes may be made.*
 
-[![Build Status](https://travis-ci.org/packettide/bree.png)](https://travis-ci.org/packettide/bree)
+[![Build Status](https://travis-ci.org/packettide/bree.png?branch=master)](https://travis-ci.org/packettide/bree)
 
 
 ##Installation
@@ -59,7 +59,7 @@ Note that you can define a base field mapping in your model and override fields 
 
 ### Displaying a Bree field
 
-If you don't wish to display all Bree fields from a model or would like to control the order you can use the model attributes in your views like so: 
+If you don't wish to display all Bree fields from a model or would like to control the order you can use the model attributes in your views like so:
 
 	// Route
 	$book = new Bree('Book');
@@ -75,14 +75,14 @@ If you don't wish to display all Bree fields from a model or would like to contr
 
 	$input = Input::except('_token');
 	$book = new Bree('Book');
-	
+
 	foreach($input as $key => $value)
-	{	
+	{
 		$book->$key = $value;
 	}
-	
+
 	$book->save();
-	
+
 
 
 ## Field Definitions
