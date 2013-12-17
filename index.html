@@ -1,0 +1,201 @@
+<!DOCTYPE html>
+<html>
+
+  <head>
+    <meta charset='utf-8' />
+    <meta http-equiv="X-UA-Compatible" content="chrome=1" />
+    <meta name="description" content="Bree : A form layer for Eloquent which supports a variety of field packages" />
+
+    <link rel="stylesheet" type="text/css" media="screen" href="stylesheets/stylesheet.css">
+
+    <title>Bree</title>
+  </head>
+
+  <body>
+
+    <!-- HEADER -->
+    <div id="header_wrap" class="outer">
+        <header class="inner">
+          <a id="forkme_banner" href="https://github.com/packettide/bree">View on GitHub</a>
+
+          <h1 id="project_title">Bree</h1>
+          <h2 id="project_tagline">A form layer for Eloquent which supports a variety of field packages</h2>
+
+            <section id="downloads">
+              <a class="zip_download_link" href="https://github.com/packettide/bree/zipball/master">Download this project as a .zip file</a>
+              <a class="tar_download_link" href="https://github.com/packettide/bree/tarball/master">Download this project as a tar.gz file</a>
+            </section>
+        </header>
+    </div>
+
+    <!-- MAIN CONTENT -->
+    <div id="main_content_wrap" class="outer">
+      <section id="main_content" class="inner">
+        <p><img src="https://f.cloud.github.com/assets/563996/1727115/df8b5ae0-6299-11e3-8728-a61970b58113.png" alt="bree"></p>
+
+<h1>
+<a name="bree" class="anchor" href="#bree"><span class="octicon octicon-link"></span></a>Bree</h1>
+
+<p>Bree provides an interface to associate fieldtypes with existing Eloquent model attributes.</p>
+
+<p><em>This project is still in an early stage and breaking changes may be made.</em></p>
+
+<p><a href="https://travis-ci.org/packettide/bree"><img src="https://travis-ci.org/packettide/bree.png" alt="Build Status"></a></p>
+
+<h2>
+<a name="installation" class="anchor" href="#installation"><span class="octicon octicon-link"></span></a>Installation</h2>
+
+<p>With Laravel 4 and Composer</p>
+
+<ol>
+<li>Add <code>"packettide/bree": "@dev"</code> to your 'require' block in composer.json</li>
+<li>Run <code>composer update</code>
+</li>
+<li>Add <code>'Packettide\Bree\BreeServiceProvider',</code> to the $providers array in app/config/app.php</li>
+<li>Then publish all Bree assets - <code>php artisan bree:assets</code>
+</li>
+</ol><h2>
+<a name="basic-usage" class="anchor" href="#basic-usage"><span class="octicon octicon-link"></span></a>Basic Usage</h2>
+
+<p>In this section we'll cover the fundamentals of how to interact with Bree.
+Bree functions by wrapping an existing Eloquent model and attaching field definitions to model attributes.</p>
+
+<h3>
+<a name="defining-bree-fields-within-routescontrollers" class="anchor" href="#defining-bree-fields-within-routescontrollers"><span class="octicon octicon-link"></span></a>Defining Bree fields within routes/controllers</h3>
+
+<pre><code>$book = new Bree('Book', array(
+            'title'  =&gt; array('type' =&gt; 'Text')
+        ));
+</code></pre>
+
+<h3>
+<a name="defining-bree-fields-within-eloquent-models" class="anchor" href="#defining-bree-fields-within-eloquent-models"><span class="octicon octicon-link"></span></a>Defining Bree fields within Eloquent Models</h3>
+
+<p>In app/models/Book.php</p>
+
+<pre><code>&lt;?php
+
+class Book extends Eloquent {
+
+    public $breeFields = array(
+        'title' =&gt; array('type' =&gt; 'Text')
+    );
+</code></pre>
+
+<p>Note that you can define a base field mapping in your model and override fields in a route if desired.</p>
+
+<h3>
+<a name="display-a-new-model" class="anchor" href="#display-a-new-model"><span class="octicon octicon-link"></span></a>Display a new model</h3>
+
+<pre><code>$book = new Bree('Book');
+echo $book; //this will output fields for all defined attributes
+</code></pre>
+
+<h3>
+<a name="display-an-existing-model" class="anchor" href="#display-an-existing-model"><span class="octicon octicon-link"></span></a>Display an existing model</h3>
+
+<pre><code>$book = new Bree('Book');
+$book-&gt;find(1);
+echo $book;
+</code></pre>
+
+<h3>
+<a name="displaying-a-bree-field" class="anchor" href="#displaying-a-bree-field"><span class="octicon octicon-link"></span></a>Displaying a Bree field</h3>
+
+<p>If you don't wish to display all Bree fields from a model or would like to control the order you can use the model attributes in your views like so: </p>
+
+<pre><code>// Route
+$book = new Bree('Book');
+return View::make('books.create', array('book' =&gt; $book));
+
+// View
+{{ $book-&gt;title }} // this will output the label if available, followed by the field
+{{ $book-&gt;title-&gt;field() }} // outputs the field only
+{{ $book-&gt;title-&gt;label() }} // outputs the label only
+</code></pre>
+
+<h3>
+<a name="updatingsaving-data" class="anchor" href="#updatingsaving-data"><span class="octicon octicon-link"></span></a>Updating/Saving data</h3>
+
+<pre><code>$input = Input::except('_token');
+$book = new Bree('Book');
+
+foreach($input as $key =&gt; $value)
+{   
+    $book-&gt;$key = $value;
+}
+
+$book-&gt;save();
+</code></pre>
+
+<h2>
+<a name="field-definitions" class="anchor" href="#field-definitions"><span class="octicon octicon-link"></span></a>Field Definitions</h2>
+
+<p>Here is an example of what a field definition looks like:</p>
+
+<pre><code>array('comments' =&gt; array('type' =&gt; 'Relate', 'label' =&gt; 'Book Comments', 'related' =&gt; 'Comment', 'title' =&gt; 'title'))
+</code></pre>
+
+<ul>
+<li>The key of this array (comments) is the name of the Eloquent attribute or relation that this field should be associated with.</li>
+<li>
+<strong>Type</strong>: This is the name of the field type</li>
+<li>
+<strong>Label</strong>: This is an optional attribute used to generate a corresponding HTML label for the field</li>
+</ul><h3>
+<a name="core-field-types" class="anchor" href="#core-field-types"><span class="octicon octicon-link"></span></a>Core Field Types</h3>
+
+<p>The following field types are available by default:</p>
+
+<ul>
+<li>
+<a href="docs/field-cell.md">Cell</a> - Allows inline modification of a related Bree model</li>
+<li>
+<a href="docs/field-date.md">Date</a> - HTML5 date input</li>
+<li>
+<a href="docs/field-file.md">File</a> - A single file upload field</li>
+<li>
+<a href="docs/field-relate.md">Relate</a> - Easily bind related models to each other</li>
+<li>
+<a href="docs/field-text.md">Text</a> - Simple text input</li>
+<li>
+<a href="docs/field-textarea.md">Textarea</a> - Simple textarea input</li>
+<li>
+<a href="docs/field-time.md">Time</a> - HTML5 time input</li>
+</ul><h2>
+<a name="using-other-fields" class="anchor" href="#using-other-fields"><span class="octicon octicon-link"></span></a>Using Other Fields</h2>
+
+<p>Adding another field package to your project typically involves adding the dependency to your composer.json file and registering the service provider with your application.  Here are a few field packages which have more detailed instructions on their project pages:</p>
+
+<ul>
+<li><a href="https://github.com/packettide/bree-colorpicker">Colorpicker</a></li>
+<li><a href="https://github.com/packettide/bree-wysiwyg">Wysiwyg</a></li>
+</ul><h2>
+<a name="scaffolding-with-bree" class="anchor" href="#scaffolding-with-bree"><span class="octicon octicon-link"></span></a>Scaffolding with Bree</h2>
+
+<p>While Bree is a simple layer to add over an existing Eloquent model you may find it tedious to setup the mapping of fields to attributes and model relations etc…  We have another <a href="https://github.com/packettide/sire">package called Sire</a>, which helps alleviate this problem while also providing a simple way to scaffold an application with Bootstrap 3.</p>
+
+<h2>
+<a name="extending-bree" class="anchor" href="#extending-bree"><span class="octicon octicon-link"></span></a>Extending Bree</h2>
+
+<p>Bree is built to be a flexible and extensible base allowing for the creation of field types as they are required by a project.  <a href="docs/extend.md">To learn more about creating your own field package start here</a>.</p>
+
+<h3>
+<a name="license" class="anchor" href="#license"><span class="octicon octicon-link"></span></a>License</h3>
+
+<p>Bree is open-sourced software licensed under the <a href="http://opensource.org/licenses/MIT">MIT license</a></p>
+      </section>
+    </div>
+
+    <!-- FOOTER  -->
+    <div id="footer_wrap" class="outer">
+      <footer class="inner">
+        <p class="copyright">Bree maintained by <a href="https://github.com/packettide">packettide</a></p>
+        <p>Published with <a href="http://pages.github.com">GitHub Pages</a></p>
+      </footer>
+    </div>
+
+    
+
+  </body>
+</html>
