@@ -336,12 +336,6 @@ class Model {
 	 */
 	public function __set($key, $value)
 	{
-		if(strpos($key, 'cell_') === 0) {
-			$key = substr($key, 5);
-		}
-
-		$ft = $this->getField($key, $value, $this->fields[$key]);
-
 		if($this->isNew())
 		{
 			$tempModel = $this->baseModel->create(array());
@@ -349,11 +343,24 @@ class Model {
 			$this->find($tempModel->id);
 		}
 
-		$ft->save();
-
-		if(!$this->isRelationField($ft))
+		if(isset($this->fields[$key]))
 		{
-			$this->baseModelInstance->setAttribute($key, $ft->data);
+			if(strpos($key, 'cell_') === 0) {
+				$key = substr($key, 5);
+			}
+
+			$ft = $this->getField($key, $value, $this->fields[$key]);
+
+			$ft->save();
+
+			if(!$this->isRelationField($ft))
+			{
+				$this->baseModelInstance->setAttribute($key, $ft->data);
+			}
+		}
+		else
+		{
+			$this->baseModelInstance->setAttribute($key, $value);
 		}
 	}
 
