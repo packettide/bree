@@ -88,6 +88,8 @@ class Model {
 				$fieldType = $this->resolveFieldClass($field);
 			}
 
+			if(!$fieldType) throw new \Exception('Field Type Class - '.$field['type'].' - not resolvable');
+
 			$data = new $fieldType($key, $data, $field);
 
 			if($this->isRelationField($data))
