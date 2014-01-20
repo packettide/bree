@@ -43,7 +43,8 @@ class File extends FieldType {
 		$fileLocation = ($this->directory) ? (public_path() . $this->directory) : '';
 
 		// If we have a string and it represents a saved filelocation do nothing
-		if (is_string($this->data) && strpos($this->data, $this->removePublicPath($fileLocation)) !== false) return $this->data;
+		// if (is_string($this->data) && strpos($this->data, $this->removePublicPath($fileLocation)) !== false) return $this->data;
+		if (is_string($this->data)) return $this->data;
 
 		if(! $this->data instanceof UploadedFile)
 		{
@@ -62,12 +63,19 @@ class File extends FieldType {
 		try
 		{
 			$file = $this->data->move($fileLocation, $fileName);
-			$this->data = $this->removePublicPath($fileLocation.$fileName);
+			$filepath = $this->makeFilePath($fileLocation, $fileName);
+			$this->data = $this->removePublicPath($filepath);
 		}
 		catch(\Exception $e)
 		{
 			$this->data = '';
 		}
+	}
+
+	public function makeFilePath($location, $name)
+	{
+		$path = $location . '/' . $name;
+		return str_replace('//', '/', $path);
 	}
 
 	public function removePublicPath($path)
