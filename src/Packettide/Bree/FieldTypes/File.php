@@ -58,7 +58,7 @@ class File extends FieldType {
 			}
 		}
 
-		$fileName = $this->data->getClientOriginalName();
+		$fileName = $this->uniqueFileName($this->data);
 
 		try
 		{
@@ -81,6 +81,14 @@ class File extends FieldType {
 	public function removePublicPath($path)
 	{
 		return str_replace(public_path(), '', $path);
+	}
+
+	public function uniqueFileName(UploadedFile $file)
+	{
+		$filename = $file->getClientOriginalName();
+		$ext = $file->getClientOriginalExtension();
+
+		return substr($filename, 0, strrpos($filename, $ext)-1) . '-' . uniqid() . '.' . $ext;
 	}
 
 
