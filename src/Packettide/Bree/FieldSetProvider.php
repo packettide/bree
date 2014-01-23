@@ -97,10 +97,6 @@ class FieldSetProvider {
 		{
 			self::$fieldsets[$fieldset->getName()] = $fieldset;
 		}
-		else
-		{
-			throw new \Exception('Fieldset "'.$fieldset.'" already registered');
-		}
 	}
 
 }
