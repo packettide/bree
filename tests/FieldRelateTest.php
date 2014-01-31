@@ -47,12 +47,12 @@ class FieldRelateTest extends PHPUnit_Framework_TestCase {
 		$builder->shouldReceive('getModel')->andReturn($related);
 
 		$parent = m::mock('Illuminate\Database\Eloquent\Model');
-		$parent->shouldReceive('getKey')->andReturn(1);
+		$parent->shouldReceive('getAttribute')->with('id')->andReturn(1);
 		$parent->shouldReceive('hasGetMutator')->andReturn(false);
 		$parent->shouldReceive('getCreatedAtColumn')->andReturn('created_at');
 		$parent->shouldReceive('getUpdatedAtColumn')->andReturn('updated_at');
 
-		$relation = new Relations\HasMany($builder, $parent, 'books.author_id');
+		$relation = new Relations\HasMany($builder, $parent, 'books.author_id', 'id');
 
 
 		$options = array(
