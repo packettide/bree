@@ -80,15 +80,46 @@ class Relate extends FieldTypeRelation {
 
 		if($this->relation instanceof Relations\HasMany && is_array($this->data))
 		{
+
 			if(is_numeric($this->data[0])) // assume we have an array of ids
 			{
+				$data = new Collection();
+
 				foreach($this->data as $key => $item)
 				{
-					$this->data[$key] = $this->related->baseModel->find($item);
+					// $this->data[$key] = $this->related->baseModel->find($item);
+					$data->push($this->related->baseModel->find($item));
 				}
 			}
+			else
+			{
+				$data = new Collection($this->data);
+			}
 
-			$this->relation->saveMany($this->data);
+			// detach any existing models and only save the selected ones
+			$foreignKey = $this->relation->getPlainForeignKey();
+			$current = $this->relation->getResults();
+
+			if(!$current)
+			{
+				$this->relation->saveMany($data->toArray());
+				return;
+			}
+
+			$all = $data->merge($current);
+
+			foreach($all as $item)
+			{
+				if($keep = $data->find($item->getKey()))
+				{
+					$this->relation->save($keep);
+				}
+				else
+				{
+					$item->$foreignKey = null;
+					$item->save();
+				}
+			}
 		}
 		else if($this->relation instanceof Relations\BelongsToMany && is_array($this->data))
 		{
