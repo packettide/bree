@@ -174,6 +174,8 @@ class FieldRelateTest extends PHPUnit_Framework_TestCase {
 
 		$relation = m::mock('Illuminate\Database\Eloquent\Relations\HasMany');
 		$relation->shouldReceive('saveMany')->once();
+		$relation->shouldReceive('getPlainForeignKey')->once();
+		$relation->shouldReceive('getResults')->once();
 
 		$options = array(
 			'title' => 'name',
@@ -186,6 +188,32 @@ class FieldRelateTest extends PHPUnit_Framework_TestCase {
 
 		$author->save();
 	}
+
+	public function testHasManySaveWithPriorData()
+	{
+		$available = new Collection(array($this->author1, $this->author2));
+		$current = new Collection(array($this->author1));
+		$chosen = array($this->author2);
+
+		$adminModel = m::mock('Packettide\Bree\Model');
+
+		$relation = m::mock('Illuminate\Database\Eloquent\Relations\HasMany');
+		$relation->shouldReceive('save')->once();
+		$relation->shouldReceive('getPlainForeignKey')->once()->andReturn('author_id');
+		$relation->shouldReceive('getResults')->once()->andReturn($current);
+
+		$options = array(
+			'title' => 'name',
+			'label' => 'author',
+			'related' => $adminModel,
+			'relation' => $relation
+		);
+
+		$author = new FieldTypes\Relate('author', $chosen, $options);
+
+		$author->save();
+	}
+
 
 	// save
 
@@ -230,5 +258,9 @@ class EloquentModelStub extends EloquentModel {
 	public function getDates()
 	{
 		return array();
+	}
+	public function save()
+	{
+		return true;
 	}
 }
