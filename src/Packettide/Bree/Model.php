@@ -343,7 +343,7 @@ class Model {
 			$this->find($tempModel->id);
 		}
 
-		if(isset($this->fields[$key]))
+		if(isset($this->fields[$key]) || strpos($key, 'cell_') === 0)
 		{
 			if(strpos($key, 'cell_') === 0) {
 				$key = substr($key, 5);
